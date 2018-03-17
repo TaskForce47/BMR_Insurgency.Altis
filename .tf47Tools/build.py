@@ -1,8 +1,9 @@
 import os
-import sys
 import shutil
-import traceback
 import subprocess as sp
+import sys
+import traceback
+
 import yaml
 
 # GLOBALS
