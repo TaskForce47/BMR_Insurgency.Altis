@@ -16,7 +16,7 @@ REPOPATH = "{}/{}".format(REPOUSER,REPONAME)
 
 def create_release(repo):
     label = sp.check_output(["git", "describe", "--tags"]).decode('ascii').strip().split("-")[0]
-    label = 'v{}-beta.{}'.format(label, os.environ["TRAVIS_BUILD_NUMBER"])
+    label = '{}-beta.{}'.format(label, os.environ["TRAVIS_BUILD_NUMBER"])
     print(label)
     release = repo.create_release(label, prerelease=True, draft=True)
     for file in os.listdir(buildDir):
