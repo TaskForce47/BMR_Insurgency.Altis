@@ -158,12 +158,12 @@ if (DebugEnabled > 0) then {
 		} forEach ["oneachframe", "onpreloadstarted", "onpreloadfinished", "onmapsingleclick", "onplayerconnected", "onplayerdisconnected"];
 	};
 
-	[] spawn {
+	/* [] spawn {
 		sleep 5;
 		waitUntil {!isNull (findDisplay 46)};
 		handle = (findDisplay 46) displayAddEventHandler ["KeyDown", "_this call DH_fnc_keyPresses"];
 		(findDisplay 46) displayAddEventHandler ["KeyDown", {if ((_this select 1) in ((actionKeys 'User3') + [0x3d])) then {call INS_planeReverse_key_F3;};}];
-	};
+	}; */
 
 	if (INS_full_loadout isEqualTo 0) then {
 		player removealleventhandlers "Reloaded";
