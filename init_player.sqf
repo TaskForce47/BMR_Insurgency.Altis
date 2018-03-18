@@ -161,7 +161,7 @@ if (DebugEnabled > 0) then {
 	[] spawn {
 		sleep 5;
 		waitUntil {!isNull (findDisplay 46)};
-		handle = (findDisplay 46) displayAddEventHandler ["KeyDown", "_this call DH_fnc_keyPresses"];
+		/* handle = (findDisplay 46) displayAddEventHandler ["KeyDown", "_this call DH_fnc_keyPresses"]; */
 		(findDisplay 46) displayAddEventHandler ["KeyDown", {if ((_this select 1) in ((actionKeys 'User3') + [0x3d])) then {call INS_planeReverse_key_F3;};}];
 	};
 
