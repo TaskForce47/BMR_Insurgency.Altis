@@ -168,10 +168,10 @@ if (DebugEnabled > 0) then {
 	if (INS_full_loadout isEqualTo 0) then {
 		player removealleventhandlers "Reloaded";
 		player addEventHandler ["Reloaded", {_null = [] call INS_Depleated_Loadout}];
-		player addEventHandler ["Killed", {(_this select 0) removealleventhandlers "Reloaded"; _this spawn killedInfo_fnc}];
+		
 		player addEventHandler ["Respawn", {(_this select 0) spawn INS_RestoreLoadout; (_this select 0) addEventHandler ["Reloaded", {_null = [] call INS_Depleated_Loadout}]; [] spawn JIG_p_actions_resp; (_this select 0) spawn INS_UI_pref}];
 	}else{
-		player addEventHandler ["Killed", {_this spawn killedInfo_fnc}];
+		
 		player addEventHandler ["Respawn", {[] spawn JIG_p_actions_resp; (_this select 0) spawn INS_RestoreLoadout; (_this select 0) spawn INS_UI_pref}];
 	};
 
