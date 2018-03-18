@@ -84,7 +84,7 @@ class Params
 	"=BTC= Quick revive :: AI can revive. Mobile HQ Enabled.",
 	"Revive System Disabled. Mobile HQ Disabled.",
 	"Revive System Disabled. Mobile HQ Enabled."};
-	default = 1;
+	default = 6;
 	};
 	class INS_p_rev_time//10
 	{
@@ -122,7 +122,7 @@ class Params
 	"Massi Africian Rebel Army and Civilian Rebel supporters - Requirements :: @CBA_A3;@AfricanConflict_mas;@NATO_Rus_Weapons_CBA;@NATO_Rus_Vehicle",
 	"OPTRE Insurrectionists - Requirements :: @CBA_A3;@OPTRE",
 	"IFA3 Desert US Army - Rquirements :: @CBA_A3;@CUP_Terrains_Core;@CUP_Terrains_Maps;@IFA3_AIO_LITE"};
-	default = 3;
+	default = 5;
 	};
 	class INS_Dum_Param4//13
 	{
@@ -157,7 +157,7 @@ class Params
 	title = "		Maximum Simultaneous Activated Zone Limit";
 	values[]={10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,150,300,1000};
 	texts[]={"10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100","150","300","1000"};
-	default = 35;
+	default = 30;
 	};
 	class DeAct_Gzone_delay//18
 	{
@@ -171,7 +171,7 @@ class Params
 	title = "		Enable JIG Enemy Air Patrols?";
 	values[]={0,1,2,3,4,5,6};
 	texts[]={"No","A3 Helis Only","A3 Fixed Wing Only","A3 Helis and A3 Fixed Wing","Moded Helis Only","Moded Fixed Wing Only","Moded Helis and Moded Fixed Wing"};
-	default = 3;
+	default = 5;
 	};
 	class AirRespawnDelay//20
 	{
@@ -185,7 +185,7 @@ class Params
 	title = "		Air Patrol way-point type";
 	values[]={0,1};
 	texts[]={"Seek N Destroy","Hunt Players"};
-	default = 1;
+	default = 0;
 	};
 	class INS_Dum_Param5//22
 	{
@@ -255,7 +255,7 @@ class Params
 	title = "		Playable Opfor";
 	values[]={0,1};
 	texts[]={"Disabled","Enabled"};
-	default = 1;
+	default = 0;
 	};
 	class INS_logistics//32
 	{
@@ -266,7 +266,7 @@ class Params
 	"BTC's cargo, towing, object placement and lifting",
 	"BTC's cargo, towing and object placement. Duda's Advanced Sling Load lifting. Heavy enabled",
 	"BTC's cargo, towing and object placement. Duda's Advanced Sling Load lifting. Heavy disabled (realistic)"};
-	default = 1;
+	default = 0;
 	};
 	class Fatigue_ability//33
 	{
@@ -280,7 +280,7 @@ class Params
 	title = "		Damage Multiplier (Effective hit on enemy A.I.)";
 	values[]={50,100,200,300};
 	texts[]={"Low","Default","High","Very High"};
-	default = 200;
+	default = 100;
 	};
 	class INSpDamMul//35
 	{
@@ -294,7 +294,7 @@ class Params
 	title = "		Enable CAS1 Group Heli Extraction?";
 	values[]={0,1};
 	texts[]={"No","Yes"};
-	default = 1;
+	default = 0;
 	};
 	class INS_GasGrenadeMod//37
 	{
@@ -303,7 +303,7 @@ class Params
 	texts[]={
 	"No",
 	"Yes (Yellow Hand and GL smoke grenades. A3 Heli Crew Helmets and or Gas Masks from @hiddenidentitypack, @nato_russian_sf_weapons, @AVON FM12 mods"};
-	default = 1;
+	default = 0;
 	};
 	class limitPOV//38
 	{
@@ -317,21 +317,21 @@ class Params
 	title = "		Player Markers";
 	values[]={0,1};
 	texts[]={"No","Yes"};
-	default = 1;
-	};	
+	default = 0;
+	};
 	class max_ai_recruits//40
 	{
 	title = "		Recruitable AI units maximum allowed";
 	values[]={1,2,3,4,5,6,7,8,9,10};
 	texts[]={"Recruitable AI disabled","1","2","3","4","5","6","7","8","9"};
-	default = 10;
+	default = 1;
 	};
 	class AI_radio_volume//41
 	{
 	title = "		Disable Audible AI Radio?";
 	values[]={0,1};
 	texts[]={"No","Yes"};
-	default = 0;
+	default = 1;
 	};
 	class INS_full_loadout//42
 	{
@@ -359,7 +359,7 @@ class Params
 	title = "		Show Intel Location Markers?";
 	values[]={0,1};
 	texts[]={"No","Yes"};
-	default = 1;
+	default = 0;
 	};
 	class Intel_Count//46
 	{
