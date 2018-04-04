@@ -186,6 +186,9 @@ _sideWin = missionNamespace getVariable "datadownloadedby";
 if (_sideWin isEqualTo 1) then {
 	[_tskW, "succeeded"] call SHK_Taskmaster_upd;
 	[_tskE, "failed"] call SHK_Taskmaster_upd;
+	/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
+	[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+	/**************************************************************/
 } else {
 //east success / west fail
 	[_tskE, "succeeded"] call SHK_Taskmaster_upd;

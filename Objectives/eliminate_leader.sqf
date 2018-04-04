@@ -1,7 +1,7 @@
 //eliminate_leader.sqf by Jigsor
 
 sleep 2;
-private ["_newZone","_type","_rnum","_mPos","_objmkr","_bunker","_VarName","_grp","_handle","_obj_leader","_stat_grp","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_staticGuns"];
+private ["_newZone","_type","_rnum","_mPos","_objmkr","_bunker","_VarName","_grp","_handle","_obj_leader","_stat_grp","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE"];
 
 _newZone = _this select 0;
 _type = _this select 1;
@@ -9,7 +9,7 @@ _rnum = str(round (random 999));
 _mPos = _newZone;
 
 // Positional info
-while {isOnRoad _mPos} do {
+while {isOnRoad _newZone} do {
 	_mPos = _newZone findEmptyPosition [2, 30, _type];
 	sleep 0.2;
 };
@@ -32,13 +32,15 @@ _bunker setDir (random 359);
 _bunker setVectorUp [0,0,1];
 
 // Spawn Objective enemy defences
-_grp = [_newZone,14] call spawn_Op4_grp; sleep 3;
-_stat_grp = [_newZone,4,10] call spawn_Op4_StatDef;
+_grp = [_newZone,14] call spawn_Op4_grp;
+_stat_grp = [_newZone,3] call spawn_Op4_StatDef;
 
 _obj_leader = leader _grp;
 _VarName = "ObjLeader";
 _obj_leader setVehicleVarName _VarName;
 _obj_leader Call Compile Format ["%1=_This ; PublicVariable ""%1""",_VarName];
+
+_stat_grp setCombatMode "RED";
 
 _handle=[_grp, position objective_pos_logic, 75] call BIS_fnc_taskPatrol;
 
@@ -59,21 +61,25 @@ _tasktopicE = localize "STR_BMR_Tsk_topicE_eil";
 _taskdescE = localize "STR_BMR_Tsk_topicE_eil";
 [_tskE,_tasktopicE,_taskdescE,EAST,[],"created",_newZone] call SHK_Taskmaster_add;
 
-if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp};};
+if (INS_environment isEqualTo 1) then {if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp;};};};
 
 waitUntil {sleep 3; !alive _obj_leader};
 [_tskW, "succeeded"] call SHK_Taskmaster_upd;
 [_tskE, "failed"] call SHK_Taskmaster_upd;
+	/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
+	[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+	/**************************************************************/
 
 // clean up
 "ObjectiveMkr" setMarkerAlpha 0;
 sleep 90;
 
-{deleteVehicle _x; sleep 0.1} forEach (units _grp),(units _stat_grp);
-{deleteGroup _x} forEach [_grp, _stat_grp];
-_staticGuns = objective_pos_logic getVariable "INS_ObjectiveStatics";
-{deleteVehicle _x; sleep 0.1} forEach _staticGuns;
+{deleteVehicle _x; sleep 0.1} forEach (units _grp);
+{deleteVehicle _x; sleep 0.1} forEach (units _stat_grp);
+deleteGroup _grp;
+deleteGroup _stat_grp;
 
+{if (typeof _x in INS_Op4_stat_weps) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 40]);
 if (!isNull _bunker) then {deleteVehicle _bunker; sleep 0.1;};
 
 deleteMarker "ObjectiveMkr";

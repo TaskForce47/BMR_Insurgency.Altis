@@ -35,9 +35,9 @@ for "_i" from 0 to (_controlcount-1) do {
 		_currentpos set [2, TOTAL_WIDTH - LABEL_WIDTH - MULTI_COMBO_WIDTH - CATEGORY_SPACING*2 - DIALOG_MARGIN - (ITEM_WIDTH*_scale*2)];
 	};
 	_control ctrlSetPosition _currentpos;
-	//_control ctrlEnable true;
+//	_control ctrlEnable true;
 	_control ctrlShow true;
-
+	
 	if((_controlcount > 4) && (_i == (_controlcount - 1))) then {
 		_control ctrlShow false;
 		_control ctrlEnable false;

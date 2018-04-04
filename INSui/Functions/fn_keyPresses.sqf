@@ -1,5 +1,5 @@
 // by Dirty Haz
-
+/*
 disableSerialization;
 
 private ["_handled", "_D", "_Key", "_Shift", "_Ctrl", "_Alt"];
@@ -25,3 +25,4 @@ if (!keyPress_Y) then {keyPress_Y = true; _handled = true; closeDialog 0; create
 };
 
 _handled = true;
+*/

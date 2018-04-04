@@ -23,4 +23,3 @@ ASORVS_VehicleSpawnPosClear = false;
 
 createDialog "ASORVS_Main_Dialog";
 [] call ASORVS_fnc_CameraStart;
-player sideChat "Click on Vehicle Icon to Open Menu";

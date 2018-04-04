@@ -4,15 +4,16 @@ objNull spawn {
 	{
 		deleteVehicle _x;
 		_somedeleted =true;
-	} forEach (ASORVS_VehicleSpawnPos nearEntities ASORVS_VehicleSpawnRadius);
+	}
+	forEach (ASORVS_VehicleSpawnPos nearEntities ASORVS_VehicleSpawnRadius);
 	if(_somedeleted) then {
 		sleep 2;
 	};
+	//_veh = createVehicle [ASORVS_CurrentVehicle, ASORVS_VehicleSpawnPos, [], ASORVS_VehicleSpawnDir, "CAN_COLLIDE"];
 	_veh = createVehicle [ASORVS_CurrentVehicle, ASORVS_VehicleSpawnPos, [], 0, "CAN_COLLIDE"];
 	_veh setDir ASORVS_VehicleSpawnDir;
 	[_veh] call anti_collision;
 	_veh setVehicleLock "UNLOCKED";
 	if(getNumber(configFile >> "CfgVehicles" >> typeOf _veh >> "isUav")==1) then {createVehicleCrew _veh;};
 	if ((typeOf _veh) in INS_add_Chaff) then {_veh addweapon "CMFlareLauncher"; _veh addmagazine "120Rnd_CMFlare_Chaff_Magazine";};
-	if (_veh isKindOf "Ship") then {_veh addAction ["<t color='#FF9900'>Push</t>",{call Push_Vehicle},[],-1,false,true,"","_this distance _target < 8"];};
 };

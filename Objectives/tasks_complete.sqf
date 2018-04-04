@@ -9,10 +9,10 @@ _all_zones_caped = false;
 _INS_tsks_finished = false;
 _curtasks = [];
 
-{_curtasks pushBack (_x select 0);} forEach SHK_Taskmaster_Tasks;
+{_curtasks = _curtasks + [(_x select 0)];} foreach SHK_Taskmaster_Tasks;
 
 while {true} do {
-	sleep 15;
+	sleep 10;
 	{
 		if (_x call SHK_Taskmaster_isCompleted) then {
 			_curtasks = _curtasks - [_x];
@@ -25,14 +25,13 @@ if (_INS_tsks_finished) then {
 	_uncaped_eos_mkrs = all_eos_mkrs;
 	while {true} do {
 		{if (getMarkerColor _x == "ColorGreen") then {_uncaped_eos_mkrs = _uncaped_eos_mkrs - [_x]; sleep 0.1;};} foreach _uncaped_eos_mkrs;
-		//profileNamespace setVariable ["BMR_INS_progress", _uncaped_eos_mkrs];
 		if (count _uncaped_eos_mkrs isEqualTo 0) exitWith {_all_zones_caped = true;};
 		sleep 15;
 	};
 };
 
 if (_all_zones_caped) then {
-	{_curtasks pushBack (_x select 0);} forEach SHK_Taskmaster_Tasks;
+	{_curtasks = _curtasks + [(_x select 0)];} foreach SHK_Taskmaster_Tasks;
 
 	while {true} do {
 		{
@@ -42,7 +41,7 @@ if (_all_zones_caped) then {
 		} foreach _curtasks;
 		if (count _curtasks isEqualTo 0) exitwith {
 			[[],"INS_end_mssg",true,true,true] spawn BIS_fnc_MP;
-			sleep 26;
+			sleep 24;
 			[["END1",true,true], "BIS_fnc_endMission",true,true,true] spawn BIS_fnc_MP
 		};
 		sleep 10;

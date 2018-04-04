@@ -11,6 +11,7 @@ _heightInAir = 50;
 _platformOffset =2;
 ASORVS_Position = [(random -1400), (random -1400), 0];
 
+
 _seaHeight =  0 max ((ASLtoATL ASORVS_Position) select 2);
 ASORVS_Platform = "FlagChecked_F" createVehicleLocal ASORVS_Position;
 ASORVS_Platform setPosATL [ASORVS_Position select 0, (ASORVS_Position select 1), _seaHeight + _heightInAir - 20];
@@ -27,6 +28,8 @@ ASORVS_Background setPosATL [(ASORVS_Position select 0) + .55, (ASORVS_Position 
 ASORVS_Background setDir 180;
 ASORVS_Background setObjectTexture [0, _logo];
 //hideObject ASORVS_Floor;
+
+
 
 _bgCountX = 9;
 _bgCountY = 5;
@@ -56,15 +59,17 @@ for[{_bgX = 0}, {_bgX < _bgCountX}, {_bgX = _bgX + 1}] do {
 ASORVS_ClonePos = [ASORVS_Position select 0, ASORVS_Position select 1, _seaHeight+5 + _heightInAir];
 [] spawn ASORVS_fnc_ResetClone;
 //ASORVS_Clone enableSimulation false;
-_pos = ASORVS_Position;
-
+_pos = ASORVS_Position; 
 /*
 ASORVS_OriginalPos = position ASORVS_Player;
-"BlockConcrete_F" createVehicleLocal _pos;
-ASORVS_Player setPos [_pos select 0, _pos select 1, 3];
-ASORVS_Player setDir 0;
-ASORVS_Player action ["WeaponOnBack", ASORVS_Player];
+
+"BlockConcrete_F" createVehicleLocal  _pos;
+ASORVS_Player setPos [_pos select 0, _pos select 1, 3]; 
+ASORVS_Player setDir 0; 
+ASORVS_Player action ["WeaponOnBack", ASORVS_Player];  
 */
+
+
 
 _cameraTarget = [(_pos select 0) + _distancex, (_pos select 1) , _seaHeight+3 + _heightInAir];
 _cameraPos = [(_pos select 0) + _distancex, (_pos select 1)+ _distancey, _seaHeight+3 + _heightInAir];
@@ -81,6 +86,7 @@ showCinemaBorder false;
 ASORVS_Camera setPosATL _cameraPos;
 ASORVS_Camera camCommitPrepared 0;
 
+
 ASORVS_CameraPosMinZoom = _cameraPos;
 ASORVS_CameraPosMaxZoom = [_cameraPos, ASORVS_Position, 0.7] call ASORVS_fnc_vectorLerp;
 ASORVS_CameraTargetMinZoom = _cameraTarget;
@@ -92,8 +98,9 @@ ASORVS_CurrentY = ((_cameraPos select 2) - ASORVS_CameraMinY) / (ASORVS_CameraMa
 ASORVS_Light = "#lightpoint" createVehicleLocal _cameraPos;
 ASORVS_Light setPosATL _cameraPos;
 _brightness = 1;
-if(worldName in ASORVS_brightMaps) then {_brightness = 0.3;};
-
+if(worldName in ASORVS_brightMaps) then {
+	_brightness = 0.3; };
+	
 ASORVS_Light setLightBrightness _brightness;
 ASORVS_Light setLightAmbient[1,1,1];
 ASORVS_Light setLightColor[1,1,1];
@@ -114,10 +121,12 @@ waitUntil {!isNull (findDisplay ASORVS_Main_Display)};
 _pipcontrol = ASORVS_getControl(ASORVS_Main_Display,434603);
 _pipcontrol ctrlSetText  "#(argb,256,256,1)r2t(rt12,1.0)";
 
+
+
 /*
 while {ASORVS_Open} do {
 	if(ASORVS_RotateDirection != 0) then {
-		ASORVS_Clone setDir (getDir ASORVS_Clone + ASORVS_RotateDirection);
+		ASORVS_Clone setDir (getDir ASORVS_Clone + ASORVS_RotateDirection); 
 	};
 	sleep 0.05;
 };*/

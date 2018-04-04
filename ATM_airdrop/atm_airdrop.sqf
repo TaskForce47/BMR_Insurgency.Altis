@@ -27,7 +27,6 @@ _s_alt slidersetSpeed [100,100,100];
 _s_alt sliderSetPosition Altitude;
 
 Keys = 0;
-IsCutRope = false;
 
 _ctrl = _dialog displayCtrl 2903;
 {
@@ -92,23 +91,38 @@ hintsilent "";
 hint Localize "STR_ATM_hintjump";
 Cut_Rope = (FindDisplay 46) displayAddEventHandler ["KeyDown","_this call dokeyDown"];
 
-while {(getPos _target select 2) > 2} do {
-	if !(isTouchingGround _target and isNull objectParent player) then {
-		playSound "Vent";
-		sleep (1 + random 0.3);
-		playSound "Vent2";
+_height = getPos _target select 2;
+
+if (INS_ACE_para) then {//Jig adding
+	while {(getPos _target select 2) > 2} do {
+		if !(isTouchingGround _target and player == vehicle player) then {
+			playSound "Vent";
+			playSound "Vent2";
+			sleep 5;
+		};
+		if(!alive _target) then {
+			_target setPos [getPos _target select 0, getPos _target select 1, 0];
+			0=[_target,_loadout] call ATM_Setloadout;
+		};
 	};
-	if !(INS_ACE_para) then {//Jig adding
+}else{
+	while {(getPos _target select 2) > 2} do {
+		if !(isTouchingGround _target and player == vehicle player) then {
+			playSound "Vent";
+			playSound "Vent2";
+			sleep 5;
+		};
 		if (getPos _target select 2 < 160) then {
 			_target action ["OpenParachute", _target];
 		};
-	};
-	if(!alive _target) then {
-		_target setPos [getPos _target select 0, getPos _target select 1, 0];
-		0=[_target,_loadout] call ATM_Setloadout;
+		if(!alive _target) then {
+			_target setPos [getPos _target select 0, getPos _target select 1, 0];
+			0=[_target,_loadout] call ATM_Setloadout;
+		};
 	};
 };
 
+//"AparPercMstpSnonWnonDnon_AmovPpneMstpSnonWnonDnon"
 _target switchmove "";//Jig adding
 
 hint Localize "STR_ATM_hintload";
@@ -119,10 +133,7 @@ _target removeAction GreenOn;
 _target removeaction Iron;
 deletevehicle (_target getvariable "frontpack"); _target setvariable ["frontpack",nil,true];
 deletevehicle (_target getvariable "lgtarray"); _target setvariable ["lgtarray",nil,true];
-if (!IsCutRope) then {
-	(findDisplay 46) displayRemoveEventHandler ["KeyDown", Cut_Rope];
-};
-
+(findDisplay 46) displayRemoveEventHandler ["KeyDown", Cut_Rope];
 sleep 3;
 hintsilent "";
 sleep 1;

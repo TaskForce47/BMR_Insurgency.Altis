@@ -30,16 +30,15 @@ player createDiaryRecord ["Diary", ["3rd Party Credits","
 	<br />tky_evo_performance report by GITS Tankbuster
 	<br />SHK_buildingpos.sqf v0.12 and shk_taskmaster by Shuko
 	<br />BTK Cargo Drop v1.92 by sxp2high
-	<br />zbe_cache_script_v4.6a by zorrobyte
+	<br />zbe_cache_script_version_v3.7 by zorrobyte
 	<br />Bon's Infantry Recruitment Redux -- by Moser
 	<br />Mine Detector Script version alpha 0.6 by Lala14
+	<br />Modified-Fatigue-v100 by Quiksilver
 	<br />Fog script v1.62 by Rockhount[BAfH]
 	<br />ASOR Vehicle Selector v1.4 by Lecks
 	<br />INS_SuicideBomber.sqf recruit civilian modification by SupahG33K
 	<br />fn_Battle.sqf by Mikey74
-	<br />Loadout Transfer by S.Crowe
 	<br />ADF_helipadLights.sqf by Whiztler
-	<br />Advanced Sling Loading by Duda
 	<br />
 	<br />-------------------------- Functions ----------------------------
 	<br />remove_carcass_fnc code by BIS
@@ -55,7 +54,6 @@ player createDiaryRecord ["Diary", ["3rd Party Credits","
 	<br />Boat push - v0.1  by BearBison
 	<br />find_civ_bomber_fnc by SupahG33K
 	<br />killed_ss_bmbr_fnc modified by SupahG33K
-	<br />INS_Brighter_Nights ocde by Ralian
 	<br />
 	<br />------------------------ Development --------------------------
 	<br />Thanks to BIS for such a great platform.
@@ -67,13 +65,12 @@ player createDiaryRecord ["Diary", ["3rd Party Credits","
 	<br />	and feedback especially in Headless Client addition.
 	<br />BMR_Insurgency_v1_44 release in Honor and Memory of
 	<br />	Robert Lynn Lewellen. AKA Spectrum Warrior of Elite Arma Warriors
-	<br />	who exposed me to scripting, Insurgency and Evolution game modes back in Arma 1.
+	<br />	who exposed me to scripting, Insurgency and Evolution game modes back in Arma 1.	
 	<br />
 	"]];
 player createDiaryRecord ["Diary", ["Credits","
 	<br />Mission Author - Jigsor =BMR=
 	<br />
-	<br />OPTRE Port by Costno
 	<br />Many original functions and scripts by Jigsor =BMR=.
 	<br />Several functions and scripts by BTC Giallustio and Ghost
 	<br />were modified by Jigsor =BMR=.
@@ -89,9 +86,7 @@ player createDiaryRecord ["Diary", ["INFO","
 	<br />
 	<br />Supported PIP live feeds from the helmet-cameras of their fellow group members. Requires Tactical Glasses and helmet with camera. * - Activates camera / switches to next group member. Alt+* - Deactivates camera. Shift+* - Toggles size of the display.
 	<br />
-	<br />Press F3 or Assigned User Action 3 to reverse planes when stoped.
-	<br />
-	-------------------
+	-------------------  
 	<br />-- Support --
 	<br />
 	-------------------
@@ -101,7 +96,7 @@ player createDiaryRecord ["Diary", ["INFO","
 	<br />-- Vehicles --
 	<br />
 	-------------------
-	<br />Vehicles from base will respawn if destroyed. All Blufor Mobile Head Quarters have Virtual Arsenal. Opfor MHQ has deploy option to move ammo crates to MHQ location. The Bobcat can Tow other vehicles. GhostHawks can lift light vehicles. Mohawk and Huron can lift heavy and light vehicles. Earn a Vehicle Reward of any type by destroying an ammo cache if Enemy Armor Probability parameter is set above 0%. After destroying ammo cache, scroll and click Vehicle Reward action. Mapclick desired position for reward. Wait until vehicle icon appears in top left corner. Click icon to view full list of available vehicles. Scroll then click on vehicle to view some information about it. After selection click close button and look for Vehicle Reward map marker to find the vehicle. You may postpone reward at vehicle menu by pressing escape. Be warned if you die before you spawn the vehicle you will loose the reward action.
+	<br />Vehicles from base will respawn if destroyed. All Blufor Mobile Head Quarters have Virtual Arsenal. Opfor MHQ has deploy option to move ammo crates to MHQ location. The Bobcat can Tow other vehicles. GhostHawks can lift light vehicles. Mohawk and Huron can lift heavy and light vehicles. Earn an air dropped asset of your choice by destroying an ammo cache if Enemy Armor Probability parameter is set above 0%.
 	<br />
 	-------------------
 	<br />-- Respawn --
@@ -115,6 +110,6 @@ player createDiaryRecord ["Diary", ["INFO","
 	<br />
 	<br />While waiting for a revive you can spectate and control camera with usual movement controls.
 	<br />
-	<br />To have a fully restored loadout/kit after respawn or revive, use scroll action Save Respawn Loadout at main ammo box.
+	<br />To have a fully restored loadout/kit after respawn or revive, use scroll action Save Loadout at main ammo box.
   "]];
 player createDiaryRecord ["Diary", ["Briefing","Gather Intel on Ammo Cache location by picking up suitcases. Destroy Ammo Caches with satchel or demo charges. Clear all red zones of enemy forces. Complete random objectives. Get Some!"]];

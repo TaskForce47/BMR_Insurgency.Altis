@@ -4,8 +4,8 @@ _player = _this select 0;
 _didJIP =  _this select 1;
 _update = false;
 _hcEntities = entities "HeadlessClient_F";
+_text = format["%1 joined the game!",name _player];
 
-//_text = format["%1 joined the game!",name _player];
 //[[_text],"JIG_MPsideChatWest_fnc"] call BIS_fnc_MP;
 //[[_text],"JIG_MPsideChatEast_fnc"] call BIS_fnc_MP;
 
@@ -15,7 +15,7 @@ if !(_player in _hcEntities) then {
 	if (INS_play_op4 isEqualTo 0) then {
 		waitUntil {!isNil "Playable_Op4_disabled"};
 		if (side _player == east) exitWith {
-			[] remoteExec ["Playable_Op4_disabled",_player];
+			[[],"Playable_Op4_disabled",_player] call BIS_fnc_MP;
 		};
 	};
 
@@ -26,7 +26,7 @@ if !(_player in _hcEntities) then {
 		waitUntil {!isNil "Kicked_for_TKing"};
 		if (_uid in Kick_For_Duration) exitWith {
 			_pname = name _player;
-			[] remoteExec ["Kicked_for_TKing",_player];
+			[[],"Kicked_for_TKing",_player] call BIS_fnc_MP;
 			diag_log format ["Forced mission ending applied to PlayerName: %1 SteamID: %2 Player tried to rejoin after exceeding team kill warning limit set by BTC_tk_last_warning.", _pname, _uid];
 		};
 	};
@@ -42,14 +42,8 @@ if !(_player in _hcEntities) then {
 			_update = true;
 		};
 	};
-	{_intel = _x; [_intel,current_cache_pos] remoteExec ["fnc_jip_mp_intel",_player];} forEach intel_Build_objs;
+	{_intel = _x; [[_intel,current_cache_pos],"fnc_jip_mp_intel",_player] spawn BIS_fnc_MP;} forEach intel_Build_objs;
 	if (_update) then {publicVariableServer "intel_Build_objs";};
-
-	if (!isNil {missionNamespace getVariable "Land_DataTerminal_Obj"}) then {
-		if (!isNull Land_DataTerminal_Obj) then {
-			[] remoteExec ["Terminal_acction_MPfnc", _player, false];
-		};
-	};
 /*
 } else {
 	if (_didJIP) then {

@@ -1,3 +1,4 @@
+
 #include "macro.sqf"
 
 private["_request","_filter","_control","_info"];
@@ -6,6 +7,7 @@ _selectedPreset = [_this, 0, -1, [1]] call BIS_fnc_Param;
 waitUntil {!isNull (findDisplay ASORVS_Main_Display)};
 waitUntil {!ASORVS_Loading};
 disableSerialization;
+
 
 #define SIDE_EAST 0
 #define SIDE_WEST 1
@@ -60,3 +62,6 @@ if(isNil {ASORVS_UpdateLoop}) then {
 };
 ASORVS_Loading = false;
 ASORVS_FirstLoad = false;
+
+
+

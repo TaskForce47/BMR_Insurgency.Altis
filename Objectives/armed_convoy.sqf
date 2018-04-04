@@ -1,21 +1,12 @@
 //armed_convoy.sqf by Jigsor
 
 sleep 2;
-private ["_newZone","_type","_VehPool","_rnum","_range","_randVeh","_veh","_objmkr","_cone","_VarName","_grp","_handle","_obj_leader","_stat_grp","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_type","_vehicle1","_newPos","_veh1","_vehicle2","_veh2","_vehicle3","_veh3","_vehicle4","_veh4","_handle1","_allVeh","_staticGuns"];
+private ["_newZone","_type","_rnum","_objmkr","_cone","_VarName","_grp","_handle","_obj_leader","_stat_grp","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_type","_vehicle1","_newPos","_veh1","_vehicle2","_veh2","_vehicle3","_veh3","_vehicle4","_veh4","_handle1","_allVeh","_range","_maxtype"];
 
 _newZone = _this select 0;
 _type = _this select 1;
-_VehPool = + INS_Op4_Veh_Tracked;
 _rnum = str(round (random 999));
 _range = 500;
-
-_randVeh = {
-	_veh = selectRandom _VehPool;
-	if ((count _VehPool) > 1) then {
-		_VehPool = _VehPool - [_veh];
-	};
-	_veh
-};
 
 /*
 //Move Zone to Road
@@ -47,12 +38,12 @@ _objmkr = createMarker ["ObjectiveMkr", _newZone];
 _cone = createVehicle [_type, _newZone, [], 0, "None"];//Vanilla
 sleep jig_tvt_globalsleep;
 _cone setVectorUp [0,0,1];
-_cone enablesimulation false;
-_cone hideObjectGlobal true;
 
 // Spawn Objective enemy defences
-_grp = [_newZone,14] call spawn_Op4_grp; sleep 3;
-_stat_grp = [_newZone,3,14] call spawn_Op4_StatDef;
+_grp = [_newZone,14] call spawn_Op4_grp;
+_stat_grp = [_newZone,3] call spawn_Op4_StatDef;
+
+_stat_grp setCombatMode "RED";
 
 _handle=[_grp, position objective_pos_logic, 75] call BIS_fnc_taskPatrol;
 
@@ -60,37 +51,39 @@ _handle=[_grp, position objective_pos_logic, 75] call BIS_fnc_taskPatrol;
 aconvoy_grp = createGroup INS_Op4_side;
 
 _newPos = [getMarkerPos "ObjectiveMkr", 0, 50, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
-_type = [] call _randVeh;
+_maxtype = (count INS_Op4_Veh_Tracked)-1;// count types
+_type = INS_Op4_Veh_Tracked select (round random _maxtype);// select random type
 _vehicle1 = [_newPos, 0, _type, aconvoy_grp] call BIS_fnc_spawnvehicle;
 sleep 1;
 _veh1 = _vehicle1 select 0;
 
-_newPos = [getMarkerPos "ObjectiveMkr", 5, 55, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
-_type = [] call _randVeh;
+_newPos = [getMarkerPos "ObjectiveMkr", 0, 50, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
+_maxtype = (count INS_Op4_Veh_Tracked)-1;
+_type = INS_Op4_Veh_Tracked select (round random _maxtype);
 _vehicle2 = [_newPos, 0, _type, aconvoy_grp] call BIS_fnc_spawnvehicle;
 sleep 1;
 _veh2 = _vehicle2 select 0;
 
-_newPos = [getMarkerPos "ObjectiveMkr", 10, 60, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
-_type = [] call _randVeh;
+_newPos = [getMarkerPos "ObjectiveMkr", 0, 50, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
+_maxtype = (count INS_Op4_Veh_Light)-1;
+_type = INS_Op4_Veh_Light select (round random _maxtype);
 _vehicle3 = [_newPos, 0, _type, aconvoy_grp] call BIS_fnc_spawnvehicle;
 sleep 1;
 _veh3 = _vehicle3 select 0;
 
-_newPos = [getMarkerPos "ObjectiveMkr", 15, 65, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
-_type =  selectRandom INS_Op4_Veh_Light;
+_newPos = [getMarkerPos "ObjectiveMkr", 0, 50, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
+_type = INS_Op4_Veh_Light select 3;
 _vehicle4 = [_newPos, 0, _type, aconvoy_grp] call BIS_fnc_spawnvehicle;
 sleep 1;
 _veh4 = _vehicle4 select 0;
 
 _allVeh = [_veh1,_veh2,_veh3,_veh4];
-{_x setDamage 0} forEach _allVeh;
 {_x addeventhandler ["killed","[(_this select 0)] spawn remove_carcass_fnc"]} forEach (units aconvoy_grp);
 {_x addeventhandler ["killed","[(_this select 0)] spawn remove_carcass_fnc"]} forEach _allVeh;
 
 {[_x] call anti_collision} foreach _allVeh;
 {_x setVariable["persistent",true]} foreach _allVeh;
-{private _car = _x; _car allowCrewInImmobile true} forEach _allVeh;
+//{[_x] allowCrewInImmobile true} foreach _allVeh;
 
 // convoy movement
 _handle1=[aconvoy_grp, position objective_pos_logic, _range] call Veh_taskPatrol_mod;
@@ -109,7 +102,7 @@ _tasktopicE = localize "STR_BMR_Tsk_topicE_dac";
 _taskdescE = localize "STR_BMR_Tsk_descE_dac";
 [_tskE,_tasktopicE,_taskdescE,EAST,[],"created",_newZone] call SHK_Taskmaster_add;
 
-if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp};};
+if (INS_environment isEqualTo 1) then {if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp;};};};
 
 waitUntil {{alive _x} count units aconvoy_grp > 0};
 sleep 0.1;
@@ -119,18 +112,22 @@ waitUntil {{alive _x} count units aconvoy_grp < 1};
 
 [_tskW, "succeeded"] call SHK_Taskmaster_upd;
 [_tskE, "failed"] call SHK_Taskmaster_upd;
-
+	/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
+	[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+	/**************************************************************/
 // clean up
 "ObjectiveMkr" setMarkerAlpha 0;
 sleep 90;
 
-{deleteVehicle _x; sleep 0.1} forEach (units _grp),(units _stat_grp);
-{deleteGroup _x} forEach [_grp, _stat_grp, aconvoy_grp];
+{deleteVehicle _x; sleep 0.1} forEach (units _grp);
+{deleteVehicle _x; sleep 0.1} forEach (units _stat_grp);
+deleteGroup _grp;
+deleteGroup _stat_grp;
+deleteGroup aconvoy_grp;
 
 if (!isNull _cone) then {deleteVehicle _cone; sleep 0.1;};
 {if (!isNull _x) then {deleteVehicle _x; sleep 0.1}} foreach _allVeh;
-_staticGuns = objective_pos_logic getVariable "INS_ObjectiveStatics";
-{deleteVehicle _x; sleep 0.1} forEach _staticGuns;
+{if (typeof _x in INS_Op4_stat_weps) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 40]);
 
 deleteMarker "ObjectiveMkr";
 

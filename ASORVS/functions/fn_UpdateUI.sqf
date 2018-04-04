@@ -56,7 +56,7 @@ disableSerialization;
 			HIDE_ITEM(_currentIDC, ASORVS_MultiComboControls) } else { \
 			SHOWSHRUNK_ITEM(_currentIDC, ASORVS_MultiComboControls) }; \
 		_previousIDC = _currentIDC; \
-		_currentIDC = _currentIDC + 10; };
+		_currentIDC = _currentIDC + 10; }; 
 #define SHOWSHRUNK_MULTICOMBOCAT_IF(FIRSTIDC, SHOWCONDITION, COMBOCOUNT) \
 	SHOWSHRUNK_MULTICOMBO_IF(FIRSTIDC, SHOWCONDITION, COMBOCOUNT) \
 	if(SHOWCONDITION) then { ENDSHRUNK_CATEGORY };
@@ -65,6 +65,7 @@ private ["_y", "_showPrimaryWeapon", "_showPrimaryAddons", "_showLauncher", "_sh
 
 _lineCount = 1;
 _categoryCount = 0;
+
 _y = safezoneY + ASORVS_TopMargin;//safezoneY + ASORVS_ControlHeight + ASORVS_ControlSpacing;
 
 //preset is never hidden
@@ -72,6 +73,7 @@ HIDE_ITEM(ASORVS_preset_label, 3);
 END_CATEGORY
 
 _presetbottom = _y - (ASORVS_CategorySpacing * 0.5);
+
 _weapontop = _presetbottom;// - (ASORVS_CategorySpacing );//_y - (ASORVS_CategorySpacing * 0.5);
 _y = safezoneY - (1/25);
 SHOW_ITEM(ASORVS_primary_label, 2, ITEM_HEIGHT*3)

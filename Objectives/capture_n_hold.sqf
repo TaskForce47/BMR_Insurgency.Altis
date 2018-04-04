@@ -1,12 +1,11 @@
 //capture_n_hold.sqf by Jigsor
 
 sleep 2;
-private ["_newZone","_type","_rnum","_fireF","_cap_rad","_VarName","_uncaped","_caped","_ins_debug","_objmkr","_outpost","_grp","_stat_grp","_handle","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_fireF","_sfCount","_smokePos","_manArray","_text","_rwave","_hold_rad","_defender_rad","_currTime","_defenderArr","_defcnt","_holdTime","_staticGuns"];
+private ["_newZone","_type","_rnum","_cap_rad","_VarName","_uncaped","_caped","_ins_debug","_objmkr","_outpost","_grp","_stat_grp","_handle","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_manArray","_text","_rwave","_hold_rad","_defender_rad","_currTime","_defenderArr","_defcnt","_holdTime"];
 
 _newZone = _this select 0;
 _type = _this select 1;
 _rnum = str(round (random 999));
-_fireF = 1;
 _cap_rad = 25;
 _hold_rad = 50;
 _defender_rad = 200;
@@ -14,10 +13,6 @@ _VarName = "OutPost1";
 _uncaped = true;
 _caped = true;
 _ins_debug = if (DebugEnabled isEqualTo 1) then {TRUE}else{FALSE};
-
-if !(_ins_debug) then {
-	waitUntil {sleep 2; time > 300};//wait until server time sync
-};
 
 //Positional info
 objective_pos_logic setPos _newZone;
@@ -39,10 +34,11 @@ _outpost setVehicleVarName _VarName;
 _outpost Call Compile Format ["%1=_This ; PublicVariable ""%1""",_VarName];
 
 //Spawn Objective enemy defences
-_grp = [_newZone,10] call spawn_Op4_grp; sleep 3;
-_stat_grp = [_newZone,3,12] call spawn_Op4_StatDef;
+_grp = [_newZone,10] call spawn_Op4_grp;
+_stat_grp = [_newZone,3] call spawn_Op4_StatDef;
 
 //movement
+_stat_grp setCombatMode "RED";
 _handle=[_grp, position objective_pos_logic, 75] call BIS_fnc_taskPatrol;
 if (_ins_debug) then {[_grp] spawn INS_Tsk_GrpMkrs;};
 
@@ -58,31 +54,23 @@ _tasktopicE = localize "STR_BMR_Tsk_topicE_cnho";
 _taskdescE = localize "STR_BMR_Tsk_descE_cnho";
 [_tskE,_tasktopicE,_taskdescE,EAST,[],"created",_newZone] call SHK_Taskmaster_add;
 
-if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp};};
+if (INS_environment isEqualTo 1) then {if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp;};};};
 
 while {_uncaped} do {
-	if (_fireF isEqualTo 1) then {
-		if ((daytime > 20.00) || (daytime < 4.00)) then {
-			_sfCount = [1,6] call BIS_fnc_randomInt;
-			null=[_sfCount,1,220,"red",100,_newZone] spawn Drop_SmokeFlare_fnc;
-			_fireF = 2;
-		};
-	}else{
-		if (_fireF isEqualTo 9) then {_fireF = 1;}else{_fireF = _fireF +1;};
-	};
-
 	_manArray = objective_pos_logic nearEntities [["CAManBase"], _cap_rad];
+
 	{
 		if ((!(side _x == INS_Blu_side)) || (captiveNum _x isEqualTo 1)) then {
 			_manArray = _manArray - [_x];
 		};
 	} forEach _manArray;
-	sleep 4;
+
 	if ((count _manArray) > 0) exitWith {_uncaped = false};
+	sleep 4;
 };
 waitUntil {!_uncaped};
 
-if (timesup) then {timesup = false;};
+if (isNil "timesup") then {timesup = false;};
 "timesup" addPublicVariableEventHandler {call compile format ["%1",_this select 1]};
 
 _text = format [localize "STR_BMR_outpost_caped"];
@@ -94,19 +82,19 @@ _defenderArr = objective_pos_logic nearEntities [["CAManBase"], _defender_rad];
 		_defenderArr = _defenderArr - [_x];
 	};
 } forEach _defenderArr;
-sleep 3;
+
 if (isNil "_defenderArr") then {_defenderArr = [];};
 _defcnt = count _defenderArr;
 
 switch (true) do {
-	case (_defcnt isEqualTo 2) : {_holdTime = 7;};
-	case (_defcnt isEqualTo 3) : {_holdTime = 8;};
-	case (_defcnt isEqualTo 4) : {_holdTime = 9;};
-	case (_defcnt isEqualTo 5) : {_holdTime = 10;};
-	case (_defcnt isEqualTo 6) : {_holdTime = 11;};
-	case (_defcnt isEqualTo 7) : {_holdTime = 12;};
-	case (_defcnt > 7) : {_holdTime = 13;};
-	default {_holdTime = 7;};
+	case (_defcnt isEqualTo 2) : {_holdTime = 6;};
+	case (_defcnt isEqualTo 3) : {_holdTime = 7;};
+	case (_defcnt isEqualTo 4) : {_holdTime = 8;};
+	case (_defcnt isEqualTo 5) : {_holdTime = 9;};
+	case (_defcnt isEqualTo 6) : {_holdTime = 10;};
+	case (_defcnt isEqualTo 7) : {_holdTime = 11;};
+	case (_defcnt > 7) : {_holdTime = 12;};
+	default {_holdTime = 6;};
 };
 
 _currTime = time;
@@ -117,23 +105,22 @@ if (_ins_debug) then {diag_log format["TIMER PARAMETERS Server Time %1 Timer Len
 
 _rwave = [_newZone,_ins_debug] spawn {
 
-	private ["_newZone","_start_dis","_cnhWaveUnits","_cnhWaveGrps","_c","_start_pos1","_midLength","_midDir","_midPos","_pointC","_ins_debug","_rgrp1","_newPosw","_wp","_bellDir"];
+	private ["_newZone","_start_dis","_cnhWaveUnits","_cnhWaveGrps","_start_pos1","_midLength","_midDir","_midPos","_pointC","_ins_debug","_rgrp1","_newPosw","_wp","_bellDir"];
 
 	_newZone = _this select 0;
 	_ins_debug = _this select 1;
 	_cnhWaveUnits = [];
 	_cnhWaveGrps = [];
 	curvePosArr = [];
-	_c = 0;
 	makewave = true;
 
 	"makewave" addPublicVariableEventHandler {call compile format ["%1",_this select 1]};
 
 	while {makewave} do	{
-		if (floor random 2 isEqualTo 0) then {_bellDir = 90;}else{_bellDir = 270;};
+		if (round(random(1)) isEqualTo 0) then {_bellDir = 90;}else{_bellDir = 270;};
 
 		//Thanks to Larrow for this next block. Creates 2D obtuse isosceles triangle points.
-		_start_dis = [250,400] call BIS_fnc_randomInt;
+		_start_dis = [400,500] call BIS_fnc_randomInt;
 		_start_pos1 = [_newZone, 10, _start_dis, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
 		_midLength = ( _newZone distance _start_pos1 ) / 2;
 		_midDir = [ objective_pos_logic, _start_pos1 ] call BIS_fnc_relativeDirTo;
@@ -144,7 +131,8 @@ _rwave = [_newZone,_ins_debug] spawn {
 
 		curvePosArr = [_start_pos1,_newZone,_pointC,12,false,_ins_debug] call rej_fnc_bezier;
 
-		private _count = 0;
+		private "_count";
+		_count = 0;
 
 		while {curvePosArr isEqualTo []} do	{
 			curvePosArr = [_start_pos1,_newZone,_pointC,12,false,_ins_debug] call rej_fnc_bezier;
@@ -156,18 +144,15 @@ _rwave = [_newZone,_ins_debug] spawn {
 		if (curvePosArr isEqualTo []) exitWith {makewave = false; publicVariable "makewave";};
 
 		if (count curvePosArr > 0) then	{
-			_rgrp1 = [_start_pos1,6] call spawn_Op4_grp; sleep 1;
+			_rgrp1 = [_start_pos1,6] call spawn_Op4_grp;
 
 			_cnhWaveGrps pushBack _rgrp1;
 			{_cnhWaveUnits pushBack _x;} forEach (units _rgrp1);
 
-			_sfCount = [3,8] call BIS_fnc_randomInt;
-			_smokePos = (curvePosArr select 6);
-			null=[_sfCount,0,215,"red",50,_smokePos] spawn Drop_SmokeFlare_fnc;
-
 			//reinforcement/wave group movement
 			for "_i" from 0 to (count curvePosArr) -1 do {
-				private _newPosx = (curvePosArr select 0);
+				private "_newPosx";
+				_newPosx = (curvePosArr select 0);
 
 				_wp = _rgrp1 addWaypoint [_newPosx, 0];
 				_wp setWaypointType "MOVE";
@@ -181,11 +166,8 @@ _rwave = [_newZone,_ins_debug] spawn {
 			};
 			if (_ins_debug) then {[_rgrp1] spawn INS_Tsk_GrpMkrs;};
 
-			sleep 54;
+			sleep 55;
 			if (!makewave) exitWith {};
-
-			_c = _c + 1;
-			if (_c > 14) then {timesup = true; publicVariable "timesup"; sleep 3; makewave = false; publicVariableServer "makewave";};//added to combat runaway loop on dedi, happens when no player has timer.
 		};
 	};
 
@@ -194,7 +176,9 @@ _rwave = [_newZone,_ins_debug] spawn {
 	deleteGroup _rgrp1; sleep 0.1;
 
 	[_cnhWaveUnits,_cnhWaveGrps] spawn {
-		params ["_unitsArr","_grpsArr"];
+		private ["_unitsArr","_grpsArr"];
+		_unitsArr = _this select 0;
+		_grpsArr = _this select 1;
 		sleep 120;
 		{if (alive _x) then {deleteVehicle _x; sleep 0.1}} forEach _unitsArr;
 		{deleteGroup _x} count _grpsArr;
@@ -224,22 +208,25 @@ while {_caped} do {
 		[_tskW, "succeeded"] call SHK_Taskmaster_upd;
 		[_tskE, "failed"] call SHK_Taskmaster_upd;
 		_caped = false;
+			/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
+			[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+			/**************************************************************/
 	};
 	sleep 4;
 };
 
 //clean up
 "ObjectiveMkr" setMarkerAlpha 0;
-sleep 180;
+sleep 90;
 
 if (!isNull _outpost) then {deleteVehicle _outpost; sleep 0.1;};
-
-{deleteVehicle _x; sleep 0.1} forEach (units _grp),(units _stat_grp);
-{deleteGroup _x} forEach [_grp, _stat_grp];
-_staticGuns = objective_pos_logic getVariable "INS_ObjectiveStatics";
-{deleteVehicle _x; sleep 0.1} forEach _staticGuns;
+{deleteVehicle _x; sleep 0.1} forEach (units _grp);
+{deleteVehicle _x; sleep 0.1} forEach (units _stat_grp);
+deleteGroup _grp;
+deleteGroup _stat_grp;
 
 {if (typeOf _x in INS_men_list) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 40]);
+{if (typeOf _x in INS_Op4_stat_weps) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 40]);
 {if (typeOf _x in objective_ruins) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 30]);
 
 deleteMarker "ObjectiveMkr";

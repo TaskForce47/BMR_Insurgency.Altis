@@ -1,61 +1,21 @@
 //road_block.sqf by Jigsor
 
 sleep 2;
-private ["_newZone","_type","_rnum","_insdebug","_roads","_sample","_rest","_rad","_allGrps","_allUnits","_run","_rbActive","_roadsSorted","_nearestRoad","_roadConnectedTo","_connectedRoad","_bgPos","_roadDir","_rbmkr","_bargate","_VarName","_bunker1","_bunker2","_unit_type","_unit1","_unit2","_damage","_rbWP","_objmkr","_grp","_handle","_maxtype","_vehPos","_Lveh","_LvehGrp","_handle1","_onActiv","_onDeAct","_bgTrig","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_stat_grp","_staticGuns"];
+private ["_newZone","_type","_rnum","_insdebug","_roads","_rad","_allGrps","_allUnits","_rbActive","_roadsSorted","_nearestRoad","_bgPos","_roadDir","_rbmkr","_bargate","_VarName","_bunker1","_bunker2","_unit_type","_unit1","_unit2","_damage","_rbWP","_objmkr","_grp","_handle","_maxtype","_vehPos","_Lveh","_LvehGrp","_handle1","_onActiv","_onDeAct","_bgTrig","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_stat_grp"];
 
 _newZone = _this select 0;
 //_type = _this select 1;
 _rnum = str(round (random 999));
-_rest = 2;
-_rad = 200;
+_rad = 100;
 _roads = [];
-_sample = [];
 _allGrps = [];
 _allUnits = [];
-_run = true;
 _rbActive = true;
 _insdebug = if (DebugEnabled isEqualTo 1) then {TRUE}else{FALSE};
 RoadBlockEast = objNull;
 
-//find roadblock position and orientation
-while {_run} do {
-	_sample = _newZone nearRoads _rad;
-	sleep _rest;
-	if (count _sample > 1) then {
-		_roadsSorted = ([_sample,[],{_newZone distance _x},"ASCEND"] call BIS_fnc_sortBy) - [_sample];
-		{
-			if (!(isOnRoad getPos _x) || ["bridge", getModelInfo _x select 0] call BIS_fnc_inString) then {
-				_roadsSorted = _roadsSorted - [_x];
-			};
-		} forEach _roadsSorted;
-
-		if (count _roadsSorted > 0) then {
-			_roadConnectedTo = roadsConnectedTo (_roadsSorted select 0);
-			if (count _roadConnectedTo > 0) then {
-				_roads pushBack (_roadsSorted select 0);
-				_run = false;
-			};
-		};
-	}else{
-		_rad = _rad + 100;
-		_rest = _rest + 0.5;
-	};
-};
-
-waitUntil {sleep 1; !_run};
-
-_nearestRoad = _roads select 0;
-_bgPos = getPos _nearestRoad;
-_connectedRoad = _roadConnectedTo select 0;
-_roadDir = [_nearestRoad, _connectedRoad] call BIS_fnc_DirTo;
-_bgPos = getPos _nearestRoad;
-
-//create objective marker
-if (_bgPos distance _newZone > 200) then {
-	_clearPos = [_bgPos, 10, 200, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
-	_newZone = _clearPos;
-};
 objective_pos_logic setPos _newZone;
+
 _objmkr = createMarker ["ObjectiveMkr", _newZone];
 "ObjectiveMkr" setMarkerShape "ELLIPSE";
 "ObjectiveMkr" setMarkerSize [2, 2];
@@ -63,6 +23,30 @@ _objmkr = createMarker ["ObjectiveMkr", _newZone];
 "ObjectiveMkr" setMarkerType "mil_dot";
 "ObjectiveMkr" setMarkerColor "ColorRed";
 "ObjectiveMkr" setMarkerText "Destroy Roadblock";
+
+//find roadblock position and orientation
+while {count _roads < 1} do {
+	_roads = _newZone nearRoads _rad;
+	sleep 2;
+	_rad = _rad + 100;
+};
+
+if (count _roads > 1) then {
+	_roadsSorted = [_roads,[],{_newZone distance _x},"ASCEND"] call BIS_fnc_sortBy;
+	_nearestRoad = _roadsSorted select 0;
+	_bgPos = getPos _nearestRoad;
+}else{
+	_nearestRoad = _roads select 0;
+	_bgPos = getPos _nearestRoad;
+};
+
+_roads = _bgPos nearRoads 20;
+_roadsSorted = [_roads,[],{_bgPos distance _x},"ASCEND"] call BIS_fnc_sortBy;
+_nearestRoad = _roadsSorted select 0;
+_roadConnectedTo = roadsConnectedTo _nearestRoad;
+_connectedRoad = _roadConnectedTo select 0;
+_roadDir = [_nearestRoad, _connectedRoad] call BIS_fnc_DirTo;
+_bgPos = getPos _nearestRoad;
 
 //create roadblock
 _bargate = createVehicle ["Land_BarGate_F", _bgPos, [], 0, "NONE"]; sleep jig_tvt_globalsleep;
@@ -101,27 +85,24 @@ if(_insdebug) then {
 
 //roadblock guard
 infGrp1 = createGroup INS_Op4_side;
-_unit_type = selectRandom INS_men_list;
+_unit_type = INS_men_list select (round (random ((count INS_men_list) - 1)));
 _unit1 = infGrp1 createUnit [_unit_type, getPosATL _bargate, [], 0, "NONE"]; sleep jig_tvt_globalsleep;
 
 infGrp2 = createGroup INS_Op4_side;
-_unit_type = selectRandom INS_men_list;
+_unit_type = INS_men_list select (round (random ((count INS_men_list) - 1)));
 _unit2 = infGrp2 createUnit [_unit_type, _bunker2 modelToWorld [0,-4,-1], [], 0, "NONE"]; sleep jig_tvt_globalsleep;
 
 {
 _x addeventhandler ["killed","[(_this select 0)] spawn remove_carcass_fnc"];
-if !(AIdamMod isEqualTo 100) then {
+if (EOS_DAMAGE_MULTIPLIER != 1) then {
 		_x removeAllEventHandlers "HandleDamage";
-		_x addEventHandler ["HandleDamage",{_damage = (_this select 2)*AIdamMod;_damage}];
+		_x addEventHandler ["HandleDamage",{_damage = (_this select 2)*EOS_DAMAGE_MULTIPLIER;_damage}];
 	};
 } forEach (units infGrp1),(units infGrp2);
 
-_stat_grp = [_bgPos,1,10] call spawn_Op4_StatDef;
-
 _allGrps pushBack infGrp1;
 _allGrps pushBack infGrp2;
-_allGrps pushBack _stat_grp;
-{_allUnits pushBack _x;} forEach (units infGrp1),(units infGrp2),(units _stat_grp);
+{_allUnits pushBack _x;} forEach (units infGrp1),(units infGrp2);
 
 (group _unit1) setVariable ["zbe_cacheDisabled",false];
 (group _unit2) setVariable ["zbe_cacheDisabled",false];
@@ -151,12 +132,13 @@ _rbWP setWaypointBehaviour "SAFE";
 _rbWP setWaypointTimeout [10, 30, 60];
 
 //infantry patrol
-_grp = [_newZone,10] call spawn_Op4_grp; sleep 3;
+_grp = [_newZone,10] call spawn_Op4_grp;
 _allGrps pushBack _grp;
 {_allUnits pushBack _x;} forEach (units _grp);
 
 //vehicle patrol
-_type = selectRandom INS_Op4_Veh_Light;
+_maxtype = (count INS_Op4_Veh_Light)-1;
+_type = INS_Op4_Veh_Light select (round random _maxtype);
 _vehPos = [_newZone, 0, 50, 10, 0, 0.6, 0] call BIS_fnc_findSafePos;
 
 _Lveh = createVehicle [_type, _vehPos, [], 0, "NONE"]; sleep jig_tvt_globalsleep;
@@ -175,7 +157,7 @@ _allGrps pushBack _LvehGrp;
 {_allUnits pushBack _x;} forEach (units _LvehGrp);
 
 //movement
-_handle=[_grp, _bgPos, 75] call BIS_fnc_taskPatrol;
+_handle=[_grp, position objective_pos_logic, 90] call BIS_fnc_taskPatrol;
 _handle1=[_LvehGrp, position objective_pos_logic, 100] call Veh_taskPatrol_mod;
 if (_insdebug) then {
 	[_grp] spawn INS_Tsk_GrpMkrs;
@@ -210,7 +192,7 @@ _tasktopicE = localize "STR_BMR_Tsk_topicE_hrb";
 _taskdescE = localize "STR_BMR_Tsk_descE_hrb";
 [_tskE,_tasktopicE,_taskdescE,EAST,[],"created",_newZone] call SHK_Taskmaster_add;
 
-if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp};};
+if (INS_environment isEqualTo 1) then {if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp;};};};
 
 //Win/Loose-Only one outcome supported.
 while {_rbActive} do {
@@ -221,20 +203,16 @@ while {_rbActive} do {
 waitUntil {!_rbActive};
 [_tskW, "succeeded"] call SHK_Taskmaster_upd;
 [_tskE, "failed"] call SHK_Taskmaster_upd;
-
-sleep 3;
-deleteVehicle _bgTrig;
-[] spawn {RoadBlockEast animate ["Door_1_rot", 1];};
-
+	/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
+	[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+	/**************************************************************/
 //cleanup
 "ObjectiveMkr" setMarkerAlpha 0;
 sleep 90;
 
-_staticGuns = objective_pos_logic getVariable "INS_ObjectiveStatics";
-{deleteVehicle _x; sleep 0.1} forEach _staticGuns;
 {deleteVehicle _x; sleep 0.1} forEach _allUnits;
-{deleteVehicle _x; sleep 0.1} forEach [_bargate,_bunker1,_bunker2,_Lveh];
+{deleteVehicle _x; sleep 0.1} forEach [_bgTrig,_bargate,_bunker1,_bunker2,_Lveh];
 {deleteGroup _x} forEach _allGrps;
-{deleteMarker _x} forEach ["ObjectiveMkr","ins_sm_roadblock"];
+deleteMarker "ObjectiveMkr";
 
 if (true) exitWith {sleep 20; nul = [] execVM "Objectives\random_objectives.sqf";};

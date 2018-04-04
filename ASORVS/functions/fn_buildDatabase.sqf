@@ -34,7 +34,10 @@ _indexof = {
 };
 
 _cfgthrowable = ASORVS_throwable;
+
 _cfgexplosives = ASORVS_explosives;
+
+
 
 _explosives = [];
 _throwable = [];
@@ -57,10 +60,11 @@ _allVehicleClasses = (configFile >> "CfgVehicles") call BIS_fnc_getCfgSubClasses
 		_scope = getNumber(_cfg >> "scope");
 		_type = getNumber(_cfg >> "type");
 		_side = getNumber(_cfg >> "side");
+		
 		_isbackpack = getNumber(_cfg >> "isbackpack");
 		if((_scope >= 2) && (_picture != "") && (_displayName != "")) then {
 			switch(true) do {
-				case (_isbackpack==1) : {
+				case (_isbackpack==1):  {
 					_capacity = getNumber (_cfg >> "maximumLoad");
 					_backpacks set [count _backpacks, [DB_Backpacks, _classname, _displayName, _picture, _capacity, count _backpacks]];
 				};

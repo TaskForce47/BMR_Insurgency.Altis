@@ -181,10 +181,10 @@ class ATM_AD_activeText
 	font = "PuristaLight";
 	color[] = {1, 1, 1, 1};
 	colorActive[] = {1, 0.2, 0.2, 1};
-	soundEnter[] = {"\A3\ui_f_data\sound\rscbutton\soundenter", 0.09, 1};
-	soundPush[] = {"\A3\ui_f_data\sound\rscbutton\soundpush", 0.0, 0};
-	soundClick[] = {"\A3\ui_f_data\sound\rscbutton\soundclick", 0.07, 1};
-	soundEscape[] = {"\A3\ui_f_data\sound\rscbutton\onescape", 0.09, 1};
+	soundEnter[] = {"\A3\ui_f\data\sound\onover", 0.09, 1};
+	soundPush[] = {"\A3\ui_f\data\sound\new1", 0.0, 0};
+	soundClick[] = {"\A3\ui_f\data\sound\onclick", 0.07, 1};
+	soundEscape[] = {"\A3\ui_f\data\sound\onescape", 0.09, 1};
 	action = "";
 	text = "";
 };
@@ -209,13 +209,15 @@ class ATM_AD_Keys
 		colorDisabled[] = {0, 0, 0, 0.3};
 		font = "PuristaMedium";
 		sizeEx = 0.025;
+		//soundSelect[] = {"\ca\ui\data\sound\new1", 0.09, 1};
 		soundSelect[] = {"\A3\ui_f\data\sound\RscCombo\soundSelect", 0.09, 1};
+		//soundExpand[] = {"\ca\ui\data\sound\new1", 0.09, 1};
 		soundExpand[] = {"\A3\ui_f\data\sound\RscCombo\soundExpand", 0.09, 1};
+		//soundCollapse[] = {"\ca\ui\data\sound\new1", 0.09, 1};
 		soundCollapse[] = {"\A3\ui_f\data\sound\RscCombo\soundCollapse", 0.09, 1};
 		maxHistoryDelay = 1.0;
 
-		class ComboScrollBar
-		{
+		class ComboScrollBar {
 			color[] = {1, 1, 1, 0.6};
 			colorActive[] = {1, 1, 1, 1};
 			colorDisabled[] = {1, 1, 1, 0.3};
@@ -233,10 +235,8 @@ class ATM_AD_ALTITUDE_SELECT
 	movingEnable = true;
 	enableSimulation = true;
 
-	class controlsBackground
-	{
-		class ATM_RscTitleBackground : ATM_AD_RscText
-		{
+	class controlsBackground {
+		class ATM_RscTitleBackground:ATM_AD_RscText {
 			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", "(profilenamespace getvariable ['GUI_BCG_RGB_A',0.7])"};
 			idc = -1;
 			x = 0.3;
@@ -244,8 +244,7 @@ class ATM_AD_ALTITUDE_SELECT
 			w = 0.52;
 			h = (1 / 25);
 		};
-		class MainBackground : ATM_AD_RscText
-		{
+		class MainBackground : ATM_AD_RscText {
 			colorBackground[] = {0, 0, 0, 0.7};
 			idc = -1;
 			x = 0.3;
@@ -257,6 +256,7 @@ class ATM_AD_ALTITUDE_SELECT
 		{
 			idc = -1;
 			text = "$STR_ATM_Alt";
+
 			x = 0.32; y = 0.258;
 			w = 0.275; h = 0.04;
 		};
@@ -264,14 +264,14 @@ class ATM_AD_ALTITUDE_SELECT
 		{
 			idc = -1;
 			text = "$STR_ATM_Keys";
+
 			x = 0.32; y = 0.358;
 			w = 0.275; h = 0.04;
 		};
 	};
 	class controls 
 	{
-		class atmTitle : ATM_AD_RscTitle
-		{
+		class atmTitle : ATM_AD_RscTitle {
 			colorBackground[] = {0, 0, 0, 0};
 			idc = -1;
 			text = "$STR_ATM_Main";
@@ -294,7 +294,8 @@ class ATM_AD_ALTITUDE_SELECT
 		class ALT_value : ATM_AD_RscText
 		{
 			idc = 2902;
-			text = "";			
+			text = "";
+			
 			x = 0.70; y = 0.258;
 			w = 0.275; h = 0.04;
 		};
@@ -302,11 +303,11 @@ class ATM_AD_ALTITUDE_SELECT
 		{
 			idc = 2904;
 			text = "";
+
 			x = 0.70; y = 0.258;
 			w = 0.275; h = 0.04;
 		};
-		class ATM_AD_SelectKeys : ATM_AD_Keys
-		{
+		class ATM_AD_SelectKeys : ATM_AD_Keys{
 			idc = 2903;
 			rowHeight = 0.03;
 			wholeHeight = 6.5 * 0.03;
@@ -316,8 +317,7 @@ class ATM_AD_ALTITUDE_SELECT
 			h = 0.018 * safezoneH;
 			onLBSelChanged = "[] call pkChangeKey;";
 		};
-		class ATM_AD_ButtonClose : ATM_AD_RscButtonMenu
-		{
+		class ATM_AD_ButtonClose : ATM_AD_RscButtonMenu {
 			idc = -1;
 			//shortcuts[] = {0x00050000 + 2};
 			text = "$STR_ATM_Close";

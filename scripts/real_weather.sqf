@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-private ["_lastrain","_rain","_fog","_mintime","_maxtime","_overcast","_realtime","_random","_startingdate","_startingweather","_timeforecast","_timeratio","_timesync","_wind"];
+private ["_lastrain", "_rain", "_fog", "_mintime", "_maxtime", "_overcast", "_realtime", "_random","_startingdate", "_startingweather", "_timeforecast", "_timeratio", "_timesync", "_wind"];
 
 // Real time vs fast time
 // true: Real time is more realistic weather conditions change slowly (ideal for persistent game)
@@ -39,7 +39,8 @@ _maxtime = 1200;
 // If Fastime is on
 // Ratio 1 real time second for x game time seconds
 // Default: 1 real second = 3.6 second in game
-_timeratio = 2.6;
+//_timeratio = 3.6;//original
+_timeratio = 2.6;//Jig
 
 // send sync data across the network each xxx seconds
 // 60 real seconds by default is a good value
@@ -68,7 +69,7 @@ switch(toUpper(_startingweather)) do {
 		wcweather = [0, 0, 0.6, [random 3, random 3, true], date];
 	};
 	case "RAIN": {
-		wcweather = [0.7, 0, 0.7, [random 3, random 3, true], date];
+		wcweather = [1, 0, 1, [random 3, random 3, true], date];
 	};
 	default {
 		// clear
@@ -79,17 +80,6 @@ switch(toUpper(_startingweather)) do {
 
 // add handler
 if (local player) then {
-
-	//Jig adding Brighter Nights by Ralian
-	[] spawn {
-		waitUntil {!isNil "INS_Brighter_Nights"};		
-		if (daytime > 21.00 || daytime < 3.50) then {
-			[3] call INS_Brighter_Nights;
-		}else{
-			[1] call INS_Brighter_Nights;
-		};
-	};
-
 	wcweatherstart = true;
 	"wcweather" addPublicVariableEventHandler {
 		// first JIP synchronization
@@ -131,7 +121,8 @@ setdate (wcweather select 4);
 
 // sync server & client weather & time
 [_timesync] spawn {
-	private _timesync = _this select 0;
+	private["_timesync"];
+	_timesync = _this select 0;
 
 	while { true } do {
 		wcweather set [4, date];
@@ -147,23 +138,22 @@ _overcast = 0;
 while {true} do {
 	_overcast = random 1;
 	if(_overcast > 0.68) then {
-		//_rain = random 1;
-		_rain = random 0.7;//Jig
-	}else{
+		_rain = random 1;
+	} else {
 		_rain = 0;
 	};
 	if((date select 3 > 2) and (date select 3 <6)) then {
 		_fog = 0.4 + (random 0.6);
-	}else{
+	} else {
 		if((_lastrain > 0.6) and (_rain < 0.2)) then {
 			_fog = random 0.3;
-		}else{
+		} else {
 			_fog = 0;
 		};
 	};
 	if(random 1 > 0.95) then {
 		_wind = [random 7, random 7, true];
-	}else{
+	} else {
 		_wind = [random 3, random 3, true];
 	};
 	_lastrain = _rain;
@@ -176,13 +166,5 @@ while {true} do {
 	if(_random) then {
 		_timeforecast = _mintime + (random (_maxtime - _mintime));
 	};
-
-	//Jig adding Brighter Nights by Ralian
-	if (daytime > 21.00 || daytime < 3.50) then {
-		[3] remoteExec ["INS_Brighter_Nights", [0,-2] select isDedicated, false];
-	}else{
-		[1] remoteExec ["INS_Brighter_Nights", [0,-2] select isDedicated, false];
-	};
-
 	sleep _timeforecast;
 };

@@ -8,10 +8,11 @@ if(ASORVS_MovingY) then {
 	ASORVS_CurrentY = (0.5 + ASORVS_CurrentZoom*0.5) min ASORVS_CurrentY;
 	_cameraPos = [ASORVS_CameraPosMinZoom, ASORVS_CameraPosMaxZoom, ASORVS_CurrentZoom] call ASORVS_fnc_vectorLerp;
 	_y = ASORVS_CameraMinY + ((ASORVS_CameraMaxY - ASORVS_CameraMinY) * ASORVS_CurrentY);
-	_cameraPos set [2,_y];
+	_cameraPos set [2, _y];
 	_cameraTarget = [ASORVS_CameraTargetMinZoom, ASORVS_CameraTargetMaxZoom, ASORVS_CurrentZoom]  call ASORVS_fnc_vectorLerp;
-	_cameraTarget set [2,_y];
+	_cameraTarget set [2, _y];
 	ASORVS_Camera setPosATL _cameraPos;
 	ASORVS_CameraTarget setPosATL _cameraTarget;
 	ASORVS_Camera camCommitPrepared 0.2;
+
 };

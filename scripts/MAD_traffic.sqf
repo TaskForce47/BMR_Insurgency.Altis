@@ -7,39 +7,34 @@
 
 MAD_maxCarDensity = _this select 0; //number of cars around 1 player at the same time
 MAD_carSpawnDistance = _this select 1; //how far cars spawn away from player
-MAD_maxCarDistance = _this select 2; //max distance until cars despawn
+MAD_maxCarDistance = _this select 2;	//max distance until cars despawn
 
-//Jig adding exclusion zone
-if (isNil "WBpos") then {WBpos = getPosATL trig_alarm1init;};
-//Jig adding exclusion distance
-ExcDis = 600;
-if ((toLower (worldName) isEqualTo "napfwinter") || (toLower (worldName) isEqualTo "napf") || (toLower (worldName) isEqualTo "xcam_taunus")) then {ExcDis = 750;};
-//Jig adding map size
-MTnlRad = getnumber (configfile >> "CfgWorlds" >> worldName >> "mapSize");
-if ((isNil "MTnlRad") || (MTnlRad isEqualTo 0)) then {MTnlRad = 30000;};
-if (toLower (worldName) isEqualTo "stratis") then {MTnlRad = 6700;};
+WBpos = getPosATL trig_alarm1init; //Jig adding exclusion zone
+ExcDis = 600; //Jig adding exclusion distance
 
 MAD_carsArray = [];
 
 _centerC = createCenter civilian;
 
-MAD_getDrivingRoads = {
+MAD_getDrivingRoads =
+{
 	_position = _this;
 	_roads = _position nearRoads MAD_maxCarDistance;
-
+	
 	_roads
 };
 
-MAD_getSpawnRoads = {
+MAD_getSpawnRoads =
+{
 	_position = _this;
 	_roads = _position nearRoads MAD_maxCarDistance;
 	_farRoads = [];
 	{
-		if ((_position distance position _x > MAD_carSpawnDistance) && {(_x distance WBpos > ExcDis)}) then {
-			_farRoads pushBack _x;
+		if ((_position distance position _x > MAD_carSpawnDistance) && {(_x distance WBpos > ExcDis)}) then	{
+			_farRoads = _farRoads + [_x];
 		};
 	} foreach _roads;
-
+	
 	_farRoads
 };
 
@@ -51,7 +46,8 @@ if (!isDedicated and isMultiplayer) then
 			_var = player getVariable ["MAD_roadsNear", false];
 
 			if (count _roads > 0) then {
-				if (!_var) then {
+				if (!_var) then
+				{
 					player setVariable ["MAD_roadsNear", true, true];
 				};
 			}
@@ -80,10 +76,10 @@ MAD_spawnCar = {
 			_carlist = INS_civ_Veh_Car + INS_civ_Veh_Car + INS_civ_Veh_Utl;
 		};
 
-		_roadseg = selectRandom _roads;
+		_roadseg = _roads select (floor (random (count _roads)));
 		_spawnpos = getposasl _roadseg;
 		_spawndir = getdir _roadseg;
-		_car = selectRandom _carlist;
+		_car = _carlist select (floor (random (count _carlist)));
 		_sqname = creategroup civilian;
 		_spawncar = _car createVehicle _spawnpos;
 		_spawncar setdir _spawndir; 
@@ -92,7 +88,7 @@ MAD_spawnCar = {
 		MAD_carsArray pushBack _spawncar;
 
 		//Driver
-		_civtype = selectRandom INS_civlist;
+		_civtype = INS_civlist select (floor (random (count INS_civlist)));
 		_driver = _sqname createUnit [_civtype,_spawnpos, [], 0, "FORM"];
 		_driver moveindriver _spawncar;
 		_driver setbehaviour "SAFE";
@@ -103,25 +99,30 @@ MAD_spawnCar = {
 	};
 };
 
-MAD_carWaypoint = {
+MAD_carWaypoint = 
+{
 	_driver = _this select 0;
 	_grp = group _driver;
-	_locations = nearestLocations [getPos _driver, ["NameVillage","NameCity","NameCityCapital","NameLocal","CityCenter"], MTnlRad];
-	_randomLocation = selectRandom _locations;
+	_locations = nearestLocations [getPos _driver, ["NameVillage","NameCity","NameCityCapital","NameLocal","CityCenter"], 30000];
+	_randomLocation = _locations select (floor (random (count _locations)));
 	_locationPos = locationPosition _randomLocation;
+
 	_roads = _locationPos call MAD_getDrivingRoads;
-	_road = selectRandom _roads;
+
+	_road = _roads select (floor (random (count _roads)));
 
 	if (count _roads > 0) then {
-		_wp = getposasl _road;
-		_waypoint = _grp addWaypoint [_wp, 0];
-		[_grp,0] setWaypointCompletionRadius 30;
-		_waypoint setWaypointStatements ["true", "[this] call MAD_carWaypoint"];
+	_wp = getposasl _road;
+	_waypoint = _grp addWaypoint [_wp, 0];
+	[_grp,0] setWaypointCompletionRadius 30;
+	_waypoint setWaypointStatements ["true", "[this] call MAD_carWaypoint"];
 	};
 };
 
-MAD_deleteCars = {
-	private ["_car","_owner","_players","_driver"];
+MAD_deleteCars =
+{
+	private ["_car", "_owner", "_players", "_driver"];
+
 	_players = [];
 
 	if (isMultiplayer) then	{
@@ -130,21 +131,24 @@ MAD_deleteCars = {
 				_players pushBack _x;
 			};
 		} forEach playableUnits;
-	}else{
+	}
+	else
+	{
 		_players = [player];
 	};
 
 	{
 		_car = _x;
-		_c = 0;
 
+		_c = 0;
 		{
 			if (_car distance _x > MAD_maxCarDistance and ((lineintersects [eyepos _x,getposasl _car,_x,_car]) || (terrainintersectasl [eyepos _x,getposasl _car]))) then {
 				_c = _c + 1;
 			};
 		} forEach _players;
 		
-		if (_c isEqualTo (count _players)) then	{
+		if (_c == (count _players)) then
+		{
 			_driver = (_car getvariable ["MAD_car_driver", objNull]);
 
 			if (!isNull _driver) then {
@@ -155,12 +159,14 @@ MAD_deleteCars = {
 			};
 
 			MAD_carsArray = MAD_carsArray - [_car];
+
 			deleteVehicle _car;
 		};
 	} forEach MAD_carsArray;
 };
 
-if (isServer) then {
+if (isServer) then
+{
 	if (isMultiplayer) then	{
 		while {true} do {
 			call MAD_deleteCars;
@@ -172,7 +178,8 @@ if (isServer) then {
 
 				if (_var) then {
 					{
-						if (_x distance _player < MAD_maxCarDistance) then {
+						if (_x distance _player < MAD_maxCarDistance) then
+						{
 							_count = _count + 1;
 						};
 					} forEach MAD_carsArray;

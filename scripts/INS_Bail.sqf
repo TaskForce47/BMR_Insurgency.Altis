@@ -12,8 +12,6 @@ hint "";
 
 if ((driver _veh == player) && {(getDammage _veh < 0.7) && ((isEngineOn _veh) || ((vehicle player) getHitPointDamage "hitEngine" < 0.7))}) exitWith {hint localize "STR_BMR_Bail_restrictOnDamage"};
 
-if (soundVolume isEqualTo 0.5) then {1 fadeSound 1;};
-
 moveOut _target;
 
 _loadout = [_target] call ATM_Getloadout;
@@ -24,15 +22,17 @@ sleep 0.5;
 _target addBackpack "B_Parachute";
 
 while {(getPos _target select 2) > 2} do {
-	if !(isTouchingGround _target and isNull objectParent player) then {
+	if(isTouchingGround _target and player == vehicle player) then {
+		//playSound "NoSound";
+	}
+	else
+	{
 		playSound "Vent2";
 		sleep (0.9 + random 0.3);
 		playSound "Vent";
 	};
-	if !(INS_ACE_para) then {
-		if((getPosATL _target select 2 < 150) || (getPosASL _target select 2 < 150)) then {
-			_target action ["OpenParachute", _target];
-		};
+	if((getPosATL _target select 2 < 150) || (getPosASL _target select 2 < 150)) then {
+		_target action ["OpenParachute", _target];
 	};
 	if(!alive _target) then {
 		_target setPos [getPos _target select 0, getPos _target select 1, 0];

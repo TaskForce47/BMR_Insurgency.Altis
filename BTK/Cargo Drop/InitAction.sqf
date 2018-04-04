@@ -15,10 +15,11 @@
  ******************************************************************************/
 
 //// Variables
-params ["_Transporter","_Unit"];
+_Transporter = _this select 0;
+_Unit = _this select 1;
 
 //// Check for action
-_BTK_CargoDrop_ActionAdded = _Transporter getVariable ["BTK_CargoDrop_ActionAdded", false];
+_BTK_CargoDrop_ActionAdded = _Transporter getVariable "BTK_CargoDrop_ActionAdded";
 if (_BTK_CargoDrop_ActionAdded) exitWith {};
 
 //// If no action continue here

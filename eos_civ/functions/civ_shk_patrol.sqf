@@ -44,10 +44,8 @@ if (_slack < 20) then {_slack = 20};
 // Find positions for waypoints
 private ["_a","_p"];
 while {count _wps < _cnt} do {
-	if (surfaceiswater (getpos(leader _grp)) ) then {
-		_p = [_mkr,true] call SHK_civ_pos;
-		}else{
-		_p = [_mkr,true] call SHK_civ_pos;
+if (surfaceiswater (getpos(leader _grp)) ) then {
+	_p = [_mkr,true] call SHK_civ_pos;}else{_p = [_mkr,true] call SHK_civ_pos;
 	};
     _wps set [count _wps, _p];
 };

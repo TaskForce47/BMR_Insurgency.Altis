@@ -11,7 +11,7 @@ v2 - 11/12/10 - Added "press k to toggle off" to on screen comments
 v3 11/21/10 - moved text to lower left, speeded up refresh rate.
 */
 
-private ["_mydir","_continue_script"];
+private ["_mydir", "_continue_script"];
 
 _continue_script = true;
 

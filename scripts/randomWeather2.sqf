@@ -43,7 +43,8 @@ class Params
 // Begin Script
 // ============
 
-private _startingdate = [2013, 09, 25, INS_p_time, 00];
+private "_startingdate";
+_startingdate = [2013, 09, 25, INS_p_time, 00];
 setdate _startingdate;//Jig changed time to reflect Start Time parameter
 
 // Debug Messages.  This is set to 1 for the demo mission, but you should set this to 0 for regular missions. | 0 = Debug Messages Off, 1 = Debug Messages On
@@ -109,13 +110,6 @@ mb_fnc_UpdateWeather = {
 	_weatherNextFog = _weatherNextSettings select 2;
 	_weatherNextWindEW = _weatherNextSettings select 3;
 	_weatherNextWindNS = _weatherNextSettings select 4;
-	
-	//Jig adding Brighter Nights by Ralian
-	if (daytime > 21.00 || daytime < 3.50) then {
-		[3] call INS_Brighter_Nights;
-	}else{
-		[1] call INS_Brighter_Nights;
-	};
 
 	if (overcast < _weatherNextOvercast) then {0 setOvercast 1;} else {0 setOvercast 0;};
 	1200 setRain _weatherNextRainSnow;

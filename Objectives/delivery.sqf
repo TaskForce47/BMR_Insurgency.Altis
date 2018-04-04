@@ -1,23 +1,23 @@
 //Objectives\delivery.sqf mission by Jigsor
 
 sleep 2;
-private ["_newZone","_smoke","_smkArr","_type","_rnum","_objmkr","_AA","_VarName","_grp","_vehgrp","_AAveh","_stat_grp","_inf_patrol","_AA_mob_patrol","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_droppoint","_dropedcargo","_veh","_text","_deliverydone","_MHQ3DelReady","_sphere","_cargoPos","_staticGuns"];
+private ["_newZone","_smoke","_smkArr","_type","_rnum","_objmkr","_AA","_VarName","_grp","_vehgrp","_AAveh","_stat_grp","_inf_patrol","_AA_mob_patrol","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_droppoint","_dropedcargo","_veh","_text","_deliverydone","_MHQ3DelReady","_Demo_Sphere","_cargoPos"];
 
 _newZone = _this select 0;
 _rnum = str(round (random 999));
+_MHQ3DelReady = false;
+_cargoPos = Del_box_Pos;
 _deliverydone = 0;
 deliveryfail = 0;
-_MHQ3DelReady = false;
 Demo_Loaded = false;
 Demo_Unloaded = false;
 Demo_Near = false;
 Demo_End = false;
 Task_Transport = [];
 _smkArr = [];
-_cargoPos = getPos Del_box_Pos;
 
-if ((INS_op_faction > 3) || (INS_op_faction isEqualTo 0)) then {
-	_type = selectRandom INS_Op4_Veh_AA;
+if (INS_op_faction > 2) then {
+	_type = INS_Op4_Veh_AA select (round(random((count INS_Op4_Veh_AA)-1)));
 }else{
 	_type = _this select 1;
 };
@@ -54,7 +54,7 @@ if (isNil "MHQ_3" || !Alive MHQ_3) then {// Create Helicopter MHQ_3 if it doesn'
 		};
 
 		_heli = createVehicle ["I_Heli_Transport_02_F", _mhq_3_pos, [], 0, "NONE"];	sleep jig_tvt_globalsleep;
-		_heli addeventhandler ["killed","[(_this select 0)] spawn remove_carcass_fnc"];
+		_heli addeventhandler ["killed","[(_this select 0)] spawn remove_carcass_fnc"]
 		[_heli] call paint_heli_fnc;
 		_heli setVehicleVarName _HeliName; MHQ_3 = _heli;
 		_heli Call Compile Format ["%1=_This ; PublicVariable ""%1""",_HeliName];
@@ -82,9 +82,9 @@ if (isNil "MHQ_3" || !Alive MHQ_3) then {// Create Helicopter MHQ_3 if it doesn'
 Delivery_Box setPos _cargoPos;
 Delivery_Box hideObjectGlobal false;
 
-_sphere = createVehicle ["Sign_Sphere100cm_F", getPosATL Delivery_Box, [], 0, "CAN_COLLIDE"];
+_Demo_Sphere = createVehicle ["Sign_Sphere100cm_F", getPosATL Delivery_Box, [], 0, "CAN_COLLIDE"];
 sleep jig_tvt_globalsleep;
-_sphere setPos [(getPos _sphere select 0),(getPos _sphere select 1),5];
+_Demo_Sphere setPos [(getPos _Demo_Sphere select 0),(getPos _Demo_Sphere select 1),5];
 
 waitUntil {sleep 1; alive MHQ_3};
 
@@ -105,7 +105,7 @@ _tmarker = createMarker ["Task_Transport", _newPos];
 publicVariable "Task_Transport";
 sleep 2;
 
-[] spawn { while {!isNull Demo_Arrow} do { "Task_Transport" setMarkerPos getPosWorld MHQ_3; sleep 1; }; };
+[] spawn { while {!isNull Demo_Arrow} do { "Task_Transport" setMarkerPos getposATL MHQ_3; sleep 1; }; };
 
 // create west task
 _tskW = "tskW_Freight_Delivery" + _rnum;
@@ -123,20 +123,21 @@ _taskdescE = localize "STR_BMR_Tsk_descE_lnds";
 waitUntil {sleep 1; Demo_Loaded};
 
 deleteVehicle Demo_Arrow; sleep 0.1;
-deleteVehicle _sphere; sleep 0.1;
-MHQ_3 setDamage 0; sleep 0.3;
+deleteVehicle _Demo_Sphere; sleep 0.1;
+MHQ_3 setDamage 0; sleep 0.1;
 
 [] spawn {
 	while {Demo_Loaded} do {
 		if (alive MHQ_3) then {
-			"Task_Transport" setMarkerPos getPosWorld MHQ_3;
+			"Task_Transport" setMarkerPos getposasl MHQ_3;
 			sleep 1.2;
 		};
 	};
 };
 
+_veh = MHQ_3;
 
-waitUntil {sleep 0.3; (isPlayer (driver MHQ_3)) && {(isEngineOn MHQ_3) && (!isnull (driver MHQ_3))}};
+waitUntil {sleep 0.5; (isPlayer (driver _veh)) && {(isEngineOn _veh) && (!isnull (driver _veh))}};
 
 _MHQ3DelReady = true;
 [localize "STR_BMR_delivery_ready", "JIG_MPhint_fnc"] call BIS_fnc_mp;
@@ -161,22 +162,23 @@ _AAveh setVehicleVarName _VarName;
 _AAveh Call Compile Format ["%1=_This ; PublicVariable ""%1""",_VarName];
 
 // Spawn Objective enemy defences
-_grp = [_newZone,10] call spawn_Op4_grp; sleep 3;
-_stat_grp = [_newZone,3,15] call spawn_Op4_StatDef;
+_grp = [_newZone,10] call spawn_Op4_grp;
+_stat_grp = [_newZone,3] call spawn_Op4_StatDef;
+
+_stat_grp setCombatMode "RED";
 
 _inf_patrol=[_grp, position objective_pos_logic, 75] call BIS_fnc_taskPatrol;
 _AA_mob_patrol=[_vehgrp, position objective_pos_logic, 125] call Veh_taskPatrol_mod;
 
 if (DebugEnabled isEqualTo 1) then {[_grp] spawn INS_Tsk_GrpMkrs;};
 
-if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp};};
+if (INS_environment isEqualTo 1) then {if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp;};};};
 
 // Task Conditions
 
-_veh = MHQ_3;
 [_veh] spawn {
-	params ["_veh","_text","_loop"];
-
+	private "_veh";
+	_veh = _this select 0;
 	for [{_loop=0}, {_loop<1}, {_loop=_loop}] do
 	{
 		if (Demo_Unloaded) then {
@@ -216,38 +218,41 @@ while {Demo_Loaded} do {
 };
 
 if (Demo_Unloaded) then {
-	waitUntil {sleep 1; (((getPosatl Delivery_Box select 2) < 2) || (deliveryfail isEqualTo 1))};
+	waitUntil {sleep 1; (getPosatl Delivery_Box select 2) < 2 || deliveryfail isEqualTo 1};
 
-	_droppoint = [getMarkerPos "ObjectiveMkr" select 0, getMarkerPos "ObjectiveMkr" select 1];
-	_dropedcargo = [getPosatl Delivery_Box select 0, getPosatl Delivery_Box select 1];
+	_droppoint = [ getMarkerPos "ObjectiveMkr" select 0, (getMarkerPos "ObjectiveMkr" select 1)];
+	_dropedcargo = [ getPosatl Delivery_Box select 0, (getPosatl Delivery_Box select 1)];
 
 	if ((_droppoint distance _dropedcargo < 750) && (deliveryfail isEqualTo 0) && {(alive _veh) && (alive (driver _veh))}) then	{
 		_text = format[localize "STR_BMR_delivery_success"];
-		[[_text],"JIG_MPTitleText_fnc",WEST,false] call BIS_fnc_mp;
+		[[_text],"JIG_MPTitleText_fnc",true,nil,WEST] call BIS_fnc_mp;
 		_deliverydone = 1;
 	};
 
-	if ((_droppoint distance _dropedcargo > 750) && (deliveryfail isEqualTo 0) && {(alive _veh) && (alive (driver _veh))}) then {
+	if (_droppoint distance _dropedcargo > 750 && (deliveryfail isEqualTo 0) && {(alive _veh) && (alive (driver _veh))}) then {
 		_text = format[localize "STR_BMR_delivery_fail"];
-		[[_text],"JIG_MPTitleText_fnc",WEST,false] call BIS_fnc_mp;
+		[[_text],"JIG_MPTitleText_fnc",true,nil,WEST] call BIS_fnc_mp;
 		deliveryfail = 1;
 	}
 	else
 	{
 		if (isnull (driver _veh) || (!alive _veh) || (!alive (driver _veh))) then {
 			_text = format[localize "STR_BMR_transport_down"];
-			[[_text],"JIG_MPTitleText_fnc",WEST,false] call BIS_fnc_mp;
+			[[_text],"JIG_MPTitleText_fnc",true,nil,WEST] call BIS_fnc_mp;
 			deliveryfail = 1;
 		};
 	};
 };
 
 // Win - Loose
-waitUntil {sleep 1; ((deliveryfail isEqualTo 1) || (_deliverydone isEqualTo 1))};
+waitUntil {sleep 1; (deliveryfail isEqualTo 1 || _deliverydone isEqualTo 1)};
 
 if (_deliverydone isEqualTo 1) then {
 	[_tskW, "succeeded"] call SHK_Taskmaster_upd;
 	[_tskE, "failed"] call SHK_Taskmaster_upd;
+	/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
+	[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+	/**************************************************************/
 };
 if (deliveryfail isEqualTo 1) then {
 	[_tskE, "succeeded"] call SHK_Taskmaster_upd;
@@ -261,16 +266,19 @@ Demo_Loaded = false; publicVariable "Demo_Loaded"; sleep 3;
 "Task_Transport" setMarkerAlpha 0;
 
 if (!isNull Demo_Arrow) then {deleteVehicle Demo_Arrow;}; sleep 0.1;
-if (!isNull _sphere) then {deleteVehicle _sphere;};
+if (!isNull _Demo_Sphere) then {deleteVehicle _Demo_Sphere;};
 sleep 90;
 
-{deleteVehicle _x; sleep 0.1} forEach (units _grp),(units _stat_grp),(units _vehgrp);
-{deleteGroup _x} forEach [_grp, _stat_grp, _vehgrp];
+{deleteVehicle _x; sleep 0.1} forEach (units _grp);
+{deleteVehicle _x; sleep 0.1} forEach (units _stat_grp);
+{deleteVehicle _x; sleep 0.1} forEach (units _vehgrp);
+deleteGroup _grp;
+deleteGroup _stat_grp;
+deleteGroup _vehgrp;
 
-if (!isNull _AAveh) then {deleteVehicle _AAveh;};
+if (!isNull _AAveh) then {deleteVehicle _AAveh; sleep 0.1;};
 
-_staticGuns = objective_pos_logic getVariable "INS_ObjectiveStatics";
-{deleteVehicle _x; sleep 0.1} forEach _staticGuns;
+{if (typeOf _x in INS_Op4_stat_weps) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 40]);
 {if (typeOf _x in objective_ruins) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 30]);
 if (ObjNull in _smkArr) then {{_smkArr = _smkArr - [objNull]} forEach _smkArr;}; {deleteVehicle _x;} count _smkArr;
 

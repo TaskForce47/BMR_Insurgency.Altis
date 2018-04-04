@@ -1,31 +1,25 @@
 //Settings
 
 btc_qr_ik_headshot = false; //No revive if headshot
-btc_qr_ik_heavy_damage = false; //No revive if heavy damage (eg big explosion)
+btc_qr_ik_heavy_damage = false; //No revive if heave damage (eg big explosion)
 
-btc_qr_help_radius = 75; //Check for helpers nearby
-btc_qr_time = INS_p_rev_time; //time in seconds for revive (0 = no time limit)
+btc_qr_help_radius = 50; //Check for helpers nearby
+
+//btc_qr_time = 300; //time in seconds for revive (0 = no time limit)
+btc_qr_time = INS_p_rev_time;
 btc_qr_show_time = true; //if true it shows time while unc
+
 btc_qr_dam_unc = false; //An unconscious unit can be damaged
 btc_qr_dam_unc_ratio = 1; //if btc_qr_dam_unc is true, you can reduce the damage taken when unc (1 = no reduce)
 btc_qr_unc_scream = true; //if true units will call for help
-btc_qr_unc_leave_group = false; // if true unc units will leave the group
-btc_qr_AI_resp = false; //If false the AI will die when the time expires
+btc_qr_unc_leave_group = true; // if true unc units will leave the group
+
+btc_qr_AI_resp = true; //If false the AI will die when the time expires
+
 btc_qr_multiple_spawn = true; //If true a dialog will appear after respawn and you can select where to spawn (Only players)
+//btc_qr_def_spawn = ["Respawn_West","Respawn_East"]; //Markers names where you want to spawn
+btc_qr_def_spawn = []; //Markers names where you want to spawn
 btc_qr_cam_dist = 20;
-
-//Markers names where you want to spawn
-if (!isDedicated && hasInterface) then {// Jig adding change option for side MHQs
-	if (INS_MHQ_enabled) then {
-		if (playerSide isEqualTo WEST) then {
-			btc_qr_def_spawn = ["MHQ_1","MHQ_2","MHQ_3"];
-		};
-		if (playerSide isEqualTo EAST) then {
-			btc_qr_def_spawn = ["Opfor_MHQ"];
-		};
-	};
-};
-
 
 BTC_respawn_marker = format ["respawn_%1",playerSide];
 btc_qr_def_spawn pushBack BTC_respawn_marker;
@@ -35,11 +29,13 @@ BTC_r_base_spawn = "Land_ClutterCutter_small_F" createVehicleLocal getMarkerPos 
 	_unit setVariable ["btc_qr_set_unc_time",time_in_seconds]; // time_in_seconds = type number
 	You can set the unc time individually
 */
+
 /*
 	_unit setVariable ["btc_qr_on_respawn",{}]; //Execute when a unit respawns (_this -> _unit)
 	Example:
 	_unit setVariable ["btc_qr_on_respawn",{hint format ["%1 is back in action", name _this];}];
 */
+
 /*
 	_code = _unit setVariable ["btc_qr_on_unc",{}]; //Execute when a unit falls unc (_this -> _unit)
 	Example:

@@ -31,6 +31,7 @@ while {_magassag > (getPos _granat) select 2} do {
 //_veh = createVehicle ["Sign_Sphere10cm_F", (getPos _granat), [], 0, "NONE"];
 
 //hintsilent "top";
+//igazabol nincs a topon, szoval varunk egy picit
 sleep 1;
 
 _sattgt = "Logic" createVehicleLocal [getPos _granat select 0, getPos _granat select 1, -10];

@@ -27,7 +27,7 @@ switch (INS_p_rev) do
 	{
 		BTC_who_can_revive = ["Man"];
 		BTC_objects_actions_west = [INS_flag];
-		BTC_objects_actions_east = [INS_Op4_flag];
+		BTC_objects_actions_east = [BTC_base_flag_east];
 		BTC_objects_actions_guer = [];
 		BTC_objects_actions_civ  = [];
 		if (isServer) then {
@@ -55,7 +55,7 @@ switch (INS_p_rev) do
 	{
 		BTC_who_can_revive = INS_all_medics;
 		BTC_objects_actions_west = [INS_flag];
-		BTC_objects_actions_east = [INS_Op4_flag];
+		BTC_objects_actions_east = [BTC_base_flag_east];
 		BTC_objects_actions_guer = [];
 		BTC_objects_actions_civ  = [];
 		if (isServer) then {
@@ -79,7 +79,7 @@ BTC_action_respawn	= 0;//if black screen is set to 0 you can choose if you want 
 BTC_camera_unc		= 1;
 BTC_camera_unc_type	= ["Behind the back","High","Free"];
 BTC_respawn_time	= 0;
-BTC_active_mobile	= 1;//Active mobile respawn (You have to put in map the vehicle and give it a name. Then you have to add one object per side to move to the mobile (INS_flag,INS_Op4_flag) - (1 = yes, 0 = no))
+BTC_active_mobile	= 1;//Active mobile respawn (You have to put in map the vehicle and give it a name. Then you have to add one object per side to move to the mobile (BTC_base_flag_west,BTC_base_flag_east) - (1 = yes, 0 = no))
 BTC_mobile_respawn	= 1;//Active the mobile respawn fnc (1 = yes, 0 = no)
 BTC_mobile_respawn_time = 30;//Secs delay for mobile vehicle to respawn
 BTC_need_first_aid  = 1;//You need a first aid kit to revive (1 = yes, 0 = no)
@@ -92,7 +92,7 @@ BTC_3d_icon_color	= [1,0,0,1];
 BTC_dlg_on_respawn	= 1;//1 = Mobile only - 2 Leader group and mobile - 3 = Units group and mobile - 4 = All side units and mobile
 
 ////////////////// Don't edit below \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//if (!isDedicated) then {};
+if (!isDedicated) then {};
 //FNC
 call compile preprocessFile "=BTC=_revive\=BTC=_functions.sqf";
 
@@ -138,21 +138,21 @@ BTC_respawn_cond = false;
 	if (BTC_respawn_marker == "respawn_guer") then {BTC_respawn_marker = "respawn_guerrila";};
 	if (BTC_respawn_marker == "respawn_civ") then {BTC_respawn_marker = "respawn_civilian";};
 	BTC_r_base_spawn = "Land_ClutterCutter_small_F" createVehicleLocal getMarkerPos BTC_respawn_marker;
-	player addEventHandler ["Killed", BTC_player_killed];
+	player addEventHandler ["Killed", BTC_player_killed];	
 	player setVariable ["BTC_need_revive",0,true];
 	//{_x setVariable ["BTC_need_revive",0,true];} foreach allunits;//[] spawn {while {true} do {sleep 0.1;player sidechat format ["%1",BTC_r_mobile_selected];};};
 	if (BTC_pvp isEqualTo 1) then {player setVariable ["BTC_revive_side",str (BTC_side),true];};
 	player setVariable ["BTC_dragged",0,true];
-
-	//player actions
-	[] spawn BTC_assign_actions;
-
+	if ([player] call BTC_is_class_can_revive) then {player addAction [("<t color=""#ED2744"">") + ("First aid") + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[],BTC_first_aid], 8, true, true, "", "[] call BTC_check_action_first_aid"];};
+	player addAction [("<t color=""#ED2744"">") + ("Drag") + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[],BTC_drag], 8, true, true, "", "[] call BTC_check_action_drag"];
+	player addAction [("<t color=""#ED2744"">") + ("Carry") + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[],BTC_carry], 8, true, true, "", "[] call BTC_check_action_drag"];
+	player addAction [("<t color=""#ED2744"">") + ("Pull out injured") + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[],BTC_pull_out], 8, true, true, "", "[] call BTC_pull_out_check"];
 	if (BTC_active_mobile isEqualTo 1) then {
 		switch (true) do {
-			case (BTC_side == west) : {{private _veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_west;} foreach BTC_vehs_mobile_west_str;};
-			case (BTC_side == east) : {{private _veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_east;} foreach BTC_vehs_mobile_east_str;};
-			case (str (BTC_side) == "guer") : {{private _veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_guer;} foreach BTC_vehs_mobile_guer_str;};
-			case (BTC_side == civilian) : {{private _veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_civ;} foreach BTC_vehs_mobile_civ_str;};
+			case (BTC_side == west) : {{private ["_veh"];_veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_west;} foreach BTC_vehs_mobile_west_str;};
+			case (BTC_side == east) : {{private ["_veh"];_veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_east;} foreach BTC_vehs_mobile_east_str;};
+			case (str (BTC_side) == "guer") : {{private ["_veh"];_veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_guer;} foreach BTC_vehs_mobile_guer_str;};
+			case (BTC_side == civilian) : {{private ["_veh"];_veh = _x;_spawn = [_x] spawn BTC_mobile_marker;{_x addAction [("<t size='1.5' shadow='2' color=""#ED2744"">") + ("Move to mobile " + _veh) + "</t>","=BTC=_revive\=BTC=_addAction.sqf",[[_veh],BTC_move_to_mobile], 8, true, true, "", format ["[""%1""] call BTC_mobile_check",_veh]];} foreach BTC_objects_actions_civ;} foreach BTC_vehs_mobile_civ_str;};
 		};
 	}
 	else

@@ -99,4 +99,5 @@ if(_maxSlingloadMass > 0) then {
 	_ret = _ret + _headerformat + format["Maximum Slingload Mass</t><br/>%1%2kg</t><br/>", _itemformat, _maxSlingloadMass];
 };
 
+
 _ret

@@ -31,6 +31,7 @@ if(ASORVS_DisableLoadingUniqueRadios) then {
 	{ if([_x] call ASORVS_fnc_IsRadio) then { _oldRadios = _oldRadios + [_x]; }; } forEach (call ASORVS_fnc_GetInventoryItems);
 };
 
+
 //[_loadout] call ASORVS_fnc_applyGearArray;
 ASORVS_CurrentInventory = (_loadout call ASORVS_fnc_ApplyBlacklist);
 ASORVS_BackpackCapacityChanged = true;

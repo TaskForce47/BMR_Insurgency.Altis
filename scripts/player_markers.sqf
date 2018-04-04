@@ -68,8 +68,9 @@ aero_player_markers_pos = [0,0];
 }] call BIS_fnc_addStackedEventHandler;
 
 _getNextMarker = {
+	private ["_marker"];
 	_markerNumber = _markerNumber + 1;
-	private _marker = format["um%1",_markerNumber];
+	_marker = format["um%1",_markerNumber];
 	if(getMarkerType _marker == "") then {
 		createMarkerLocal [_marker, _this];
 	} else {

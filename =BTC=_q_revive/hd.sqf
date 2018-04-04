@@ -6,7 +6,8 @@ _ammo = _this select 4;
 
 //diag_log format ["----QR: HD = %1",_this];
 
-if (_unit getVariable ["btc_qr_unc",false] && {!btc_qr_dam_unc}) then {
+if (_unit getVariable ["btc_qr_unc",false] && {!btc_qr_dam_unc}) then 
+{
 	_dam = 0.9;
 }
 else
@@ -17,11 +18,13 @@ else
 	{
 		_exit = false;
 		if (_unit getVariable ["btc_qr_hs",false] || _unit getVariable ["btc_qr_hdam",false]) then {_dam = 2;_exit = true;};
-		if (!_exit && {damage _unit + _dam > 0.95} && {!(_unit getVariable ["btc_qr_unc",false])}) then	{
+		if (!_exit && {damage _unit + _dam > 0.95} && {!(_unit getVariable ["btc_qr_unc",false])}) then
+		{
 			_dam = 0;
 			_unit spawn btc_qr_fnc_unc;
 		};
-		if (_unit getVariable ["btc_qr_unc",false]) then {
+		if (_unit getVariable ["btc_qr_unc",false]) then 
+		{
 			_dam = _dam / btc_qr_dam_unc_ratio;
 			if (damage _unit + _dam > 0.95) then {_dam = 0;_dam = _unit call btc_qr_fnc_resp};
 		};

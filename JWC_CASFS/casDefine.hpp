@@ -469,14 +469,6 @@ class JWC_Map
 		coefMax = 4;
 		color[]  = {0, 0, 0, 1};
 	};
-	class LineMarker
-	{
-		lineDistanceMin = 3e-005;
-		lineLengthMin = 5;
-		lineWidthThick = 0.014;
-		lineWidthThin = 0.008;
-		textureComboBoxColor = "#(argb,8,8,3)color(1,1,1,1)";
-	};
 
 };
 
@@ -531,10 +523,10 @@ class JWC_Button
         animTextureDefault  = "\A3\ui_f\data\GUI\RscCommon\RscShortcutButtonMain\normal_ca.paa";
 	period = 0;
 	font = "PuristaSemibold";
-	soundEnter[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundEnter", 0.09, 1};
-	soundPush[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundPush", 0.0, 0};
-	soundClick[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundClick", 0.07, 1};
-	soundEscape[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundEscape", 0.09, 1};
+	soundEnter[] = {"\A3\ui_f\data\sound\onover", 0.090000, 1};
+	soundPush[] = {"\A3\ui_f\data\sound\new1", 0.000000, 0};
+	soundClick[] = {"\A3\ui_f\data\sound\onclick", 0.070000, 1};
+	soundEscape[] = {"\A3\ui_f\data\sound\onescape", 0.090000, 1};
 	class Attributes 
 	{
 		font = "PuristaSemibold";

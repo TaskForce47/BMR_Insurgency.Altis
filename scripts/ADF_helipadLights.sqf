@@ -38,6 +38,6 @@ if (isServer) then { // Executed by the server entity only.
 		_ADF_hpl_oPos = [_ADF_hpl_pX, _ADF_hpl_pY, _ADF_hpl_hpLoc select 2];
 		_ADF_hpl_cLight = createVehicle [ "Land_Flush_Light_yellow_F", _ADF_hpl_oPos, [], 0, "CAN_COLLIDE"]; // Create the light
 		_ADF_hpl_cLight modelToWorld _ADF_hpl_oPos; // Position the light on the helipad.
-		_ADF_hpl_hpLight pushBack _ADF_hpl_cLight; // Add the created light to the array.
+		_ADF_hpl_hpLight set [(count _ADF_hpl_hpLight), _ADF_hpl_cLight]; // Add the created light to the array.
 	};// Close loop when _nr of lights have been created.
 };

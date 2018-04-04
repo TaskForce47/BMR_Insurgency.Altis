@@ -1,6 +1,8 @@
+
 private ["_veh","_getTurrets","_vehConfig","_vehTurrets", "_slots", "_i"];
 _weapons = [];
 _veh = [_this,0,objnull,[objnull,""]] call bis_fnc_param;
+
 
 if (typename _veh != typename "") then {_veh = typeof _veh;};
 

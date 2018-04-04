@@ -4,12 +4,12 @@ remove_carcass_fnc = {
 	sleep 2;
 	if (not (_unit isKindOf "Man")) then {
 		{_x setPos position _unit} forEach crew _unit;
-		sleep 120;
+		sleep 120.0;
 		deleteVehicle _unit;
 	};
 	if (_unit isKindOf "Man") then {
 		if(not ((vehicle _unit) isKindOf "Man")) then {_unit setPos (position vehicle _unit)};
-		sleep 135;
+		sleep 135.0;
 		hideBody _unit;
 		_unit removeAllEventHandlers "killed";
 	};

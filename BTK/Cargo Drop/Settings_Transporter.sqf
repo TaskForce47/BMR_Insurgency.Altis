@@ -33,7 +33,7 @@ if (
 (_Transporter isKindOf "L39_base") ||
 (_Transporter isKindOf "An2_Base_EP1") ||
 (_Transporter isKindOf "AW159_Lynx_BAF") ||
-(_Transporter isKindOf "MQ9PredatorB")
+(_Transporter isKindOf "MQ9PredatorB") // No OR || after the last entry!!
 ) then { _SelectedTransporterTypeS = true; };
 
 //// Medium
@@ -43,7 +43,7 @@ if (
 (_Transporter isKindOf "UH60M_base_EP1") ||
 (_Transporter isKindOf "BAF_Merlin_HC3_D") ||
 (_Transporter isKindOf "Mi24_Base") ||
-(_Transporter isKindOf "UH1H_base")
+(_Transporter isKindOf "UH1H_base") // No OR || after the last entry!!
 ) then { _SelectedTransporterTypeM = true; };
 
 //// Large
@@ -51,15 +51,11 @@ if (
 (_Transporter isKindOf "CH47_base_EP1") ||
 (_Transporter isKindOf "Mi17_base") ||
 (_Transporter isKindOf "Mi171Sh_Base_EP1") ||
-(_Transporter isKindOf "MV22")
+(_Transporter isKindOf "MV22") // No OR || after the last entry!!
 ) then { _SelectedTransporterTypeL = true; };
 
 //// XTRA Large
 if (
 (_Transporter isKindOf "C130J_base") ||
-(_Transporter isKindOf "I_Heli_Transport_02_F") ||
-(_Transporter isKindOf "rhsusf_CH53E_USMC_D") ||
-(_Transporter isKindOf "rhsusf_CH53E_USMC_W") ||
-(_Transporter isKindOf "CUP_B_Merlin_HC3A_Armed_GB") ||
-(_Transporter isKindOf "OPTRE_Pelican_armed_black")
+(_Transporter isKindOf "I_Heli_Transport_02_F") // No OR || after the last entry!!
 ) then { _SelectedTransporterTypeXL = true; };

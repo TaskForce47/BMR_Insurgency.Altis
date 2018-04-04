@@ -1,7 +1,5 @@
 player allowdamage false;
 
-private ["_startPos","_spawnPos"];
-
 _dummy = "Land_HelipadEmpty_F" createVehicle [0,0,0];
 btc_qr_cam_t = "Land_HelipadEmpty_F" createVehicle [0,0,0];
 player attachTo [_dummy,[0,0,5000]];
@@ -39,14 +37,10 @@ btc_qr_cam camCommit 0;
 
 waitUntil {btc_qr_spawn_selected};
 
-_startPos = getMarkerPos (lbData [_idc, lbCurSel _idc]);//Jig adding
-_spawnPos = [_startPos, 0, 12, 1, 0, 0.7, 0] call BIS_fnc_findSafePos;//Jig adding
-
 detach player;
 player enableSimulation false;
 
-//player setPos getMarkerPos (lbData [_idc, lbCurSel _idc]);
-player setPos _spawnPos;//Jig change
+player setPos getMarkerPos (lbData [_idc, lbCurSel _idc]);
 player switchMove "";
 player allowdamage true;
 player enableSimulation true;

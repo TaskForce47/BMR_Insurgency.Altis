@@ -1,7 +1,7 @@
 //Objectives\pilot_rescue.sqf by Jigsor
 
 sleep 2;
-private ["_newZone","_type","_pilotType","_rnum","_pilot_grp","_handle","_op4_side","_blu4_side","_tsk_failed","_hero","_objmkr","_wreck","_VarName","_pilot","_grp","_stat_grp","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_loop","_nearUnits","_hero_speed","_pilotVarName","_end_loop","_radius","_base_pos","_staticGuns"];
+private ["_newZone","_type","_rnum","_pilot_grp","_handle","_op4_side","_blu4_side","_tsk_failed","_hero","_objmkr","_wreck","_VarName","_pilot","_grp","_stat_grp","_wp","_tskW","_tasktopicW","_taskdescW","_tskE","_tasktopicE","_taskdescE","_nearUnits","_hero_speed","_pilotVarName","_end_loop","_base_pos"];
 
 _newZone = _this select 0;
 _type = _this select 1;
@@ -11,37 +11,8 @@ _pilot_grp = grpNull;
 _hero = objNull;
 _tsk_failed = false;
 _end_loop = false;
-_radius = 5;
 _rnum = str(round (random 999));
 _base_p = (getMarkerPos "Respawn_West");
-_pilotType = nil;
-
-//mod for CUP
-if (INS_op_faction isEqualTo 12) then {
-	if (isClass(configfile >> "CfgVehicles" >> "BlackhawkWreck")) then {
-		activateAddons ["BlackhawkWreck"];
-		_type = "BlackhawkWreck";
-		_radius = 9;
-	};
-};
-
-//mod for Operation Trebuchet
-if (INS_op_faction isEqualTo 16) then {
-	_type = "OPTRE_Objects_Wreck_Pelican_Static2";
-	_radius = 9;
-};
-
-//mod for IFA3Lite
-if (INS_op_faction isEqualTo 17) then {
-	if (isClass(configFile >> "CfgPatches" >> "A3_Props_F_Exp")) then {
-		activateAddons ["A3_Props_F_Exp_Military"];
-		_type = "Land_HistoricalPlaneWreck_03_F";
-		_pilotType = "LIB_GER_pilot";
-		_radius = 9;
-	};
-};
-
-if (isNil "_pilotType") then {_pilotType = "B_Pilot_F";};
 
 // Positional info
 objective_pos_logic setPos _newZone;
@@ -68,7 +39,7 @@ _wreck setVehicleVarName _VarName;
 _wreck Call Compile Format ["%1=_This ; PublicVariable ""%1""",_VarName];
 
 _pilot_grp = createGroup INS_Blu_side;
-_pilot = _pilot_grp createUnit [_pilotType, _newZone, [], 0, "NONE"];
+_pilot = _pilot_grp createUnit ["B_Pilot_F", _newZone, [], 0, "NONE"];
 sleep jig_tvt_globalsleep;
 
 _pilot addeventhandler ["killed","[(_this select 0)] spawn remove_carcass_fnc"];
@@ -86,8 +57,10 @@ _pilot setCaptive true;
 [ [ _pilot, "AmovPercMstpSsurWnonDnon" ], "switchMoveEverywhere" ] call BIS_fnc_MP;
 
 // Spawn Objective enemy defences
-_grp = [_newZone,10] call spawn_Op4_grp; sleep 3;
-_stat_grp = [_newZone,3,_radius] call spawn_Op4_StatDef;
+_grp = [_newZone,10] call spawn_Op4_grp;
+_stat_grp = [_newZone,3] call spawn_Op4_StatDef;
+
+_stat_grp setCombatMode "RED";
 
 _handle=[_grp, position objective_pos_logic, 75] call BIS_fnc_taskPatrol;
 
@@ -106,7 +79,7 @@ _tasktopicE = localize "STR_BMR_Tsk_topicE_rdp";
 _taskdescE = localize "STR_BMR_Tsk_descE_rdp";
 [_tskE,_tasktopicE,_taskdescE,EAST,[],"created",_newZone] call SHK_Taskmaster_add;
 
-if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp};};
+if (INS_environment isEqualTo 1) then {if (daytime > 3.00 && daytime < 5.00) then {[] spawn {[[], "INS_fog_effect"] call BIS_fnc_mp;};};};
 
 // pilot hold position until rescued or dead
 for [{_loop=0}, {_loop<1}, {_loop=_loop}] do
@@ -148,7 +121,11 @@ if (alive _pilot) then {
 waitUntil {sleep 3; (not (alive _pilot)) || (position _pilot distance _base_p < 100)};
 
 if (not (alive _pilot)) then {[_tskW, "failed"] call SHK_Taskmaster_upd; [_tskE, "succeeded"] call SHK_Taskmaster_upd;};
-if ((position _pilot) distance _base_p < 100) then {[_tskW, "succeeded"] call SHK_Taskmaster_upd; [_tskE, "failed"] call SHK_Taskmaster_upd; sleep 20;};
+if ((position _pilot) distance _base_p < 100) then {[_tskW, "succeeded"] call SHK_Taskmaster_upd; [_tskE, "failed"] call SHK_Taskmaster_upd; sleep 20;
+	/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
+	[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+	/**************************************************************/
+};
 
 // clean up
 "ObjectiveMkr" setMarkerAlpha 0;
@@ -157,12 +134,13 @@ sleep 60;
 if (!isNull _pilot) then {[_pilot] joinSilent grpNull; sleep 1; deleteVehicle _pilot;};
 sleep 30;
 
+{deleteVehicle _x; sleep 0.1} forEach (units _grp);
+{deleteVehicle _x; sleep 0.1} forEach (units _stat_grp);
+deleteGroup _grp;
+deleteGroup _stat_grp;
+deleteGroup _pilot_grp;
 
-{deleteVehicle _x; sleep 0.1} forEach (units _grp),(units _stat_grp);
-{deleteGroup _x} forEach [_grp, _stat_grp, _pilot_grp];
-
-_staticGuns = objective_pos_logic getVariable "INS_ObjectiveStatics";
-{deleteVehicle _x; sleep 0.1} forEach _staticGuns;
+{if (typeof _x in INS_Op4_stat_weps) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 40]);
 {if (typeof _x in objective_ruins) then {deleteVehicle _x; sleep 0.1}} forEach (NearestObjects [objective_pos_logic, [], 30]);
 if (!isNull _wreck) then {deleteVehicle _wreck; sleep 0.1;};
 

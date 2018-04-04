@@ -1,4 +1,5 @@
 ASORVS_SideRestriction = true;
+
 ASORVS_BrightMaps = [];
 
 ASORVS_UnitInsigniaAsBackground = false;

@@ -48,10 +48,10 @@ class BTC_r_shortcutButton
 	size = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
 	sizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
 	text = "";
-	soundEnter[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundEnter", 0.09, 1};
-	soundPush[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundPush", 0.0, 0};
-	soundClick[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundClick", 0.07, 1};
-	soundEscape[] = {"\A3\ui_f\data\sound\RscButtonMenu\soundEscape", 0.09, 1};
+	soundEnter[] = {"\A3\ui_f\data\sound\onover", 0.09, 1};
+	soundPush[] = {"\A3\ui_f\data\sound\new1", 0.0, 0};
+	soundClick[] = {"\A3\ui_f\data\sound\onclick", 0.07, 1};
+	soundEscape[] = {"\A3\ui_f\data\sound\onescape", 0.09, 1};
 	action = "";
 	
 	class Attributes {

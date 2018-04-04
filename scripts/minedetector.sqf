@@ -36,7 +36,8 @@ MDLala_Config = MDLala_Config + [
 ];
 
 MDLALA_fnc_in_List = {
-	private _indexno = 0;
+	private ["_indexno"];
+	_indexno = 0;
 
 	{
 		if ((_x select 0) isEqualTo _this) then
@@ -69,7 +70,7 @@ MDLALA_fnc_Mine_Noise = {
 	if (!alive _unit OR isNull _unit) exitWith {};
 	_action = _this select 1;
 	if (count _this < 2) then {_action = false;};
-	_missiondir = call { private _arr = toArray str missionConfigFile; _arr resize (count _arr - 15); toString _arr };
+	_missiondir = call { private "_arr"; _arr = toArray str missionConfigFile; _arr resize (count _arr - 15); toString _arr };
 	_timesleep = 5;
 	_pitch = 5;
 
@@ -88,6 +89,11 @@ MDLALA_fnc_Mine_Noise = {
 
 		hintSilent format ["Mine = %4\nDistance = %1\nTime Until Next Beep =  %2\nPitch = %3",_distance,_timesleep,_pitch,_minename];
 		playSound3D ["A3\UI_F\data\sound\CfgNotifications\addItemOk.wss",_unit,false,[getPosASL _unit select 0,getPosASL _unit select 1,(getPosASL _unit select 2) + 1],100,_pitch,5];
+		//playSound3D [_missiondir + "beep.wav",_unit,false,[getPosASL _unit select 0,getPosASL _unit select 1,(getPosASL _unit select 2) + 1],100,_pitch,5];
+		//playSound3D ["A3\Sounds_F\sfx\hint-3.wss",_unit,false,[getPosASL _unit select 0,getPosASL _unit select 1,(getPosASL _unit select 2) + 1],100,_pitch,5];
+		//playSound3D ["A3\missions_F\data\sounds\click.wss",_unit,false,[getPosASL _unit select 0,getPosASL _unit select 1,(getPosASL _unit select 2) + 1],100,_pitch,5];
+		//playSound3D ["A3\missions_F\data\sounds\click.wss",_unit,false,getPosASL ([_unit] call MDLALA_fnc_Condition_Detect select 0),100,5,5];
+		//playSound3D [_missiondir + "Beep.ogg",_unit,false,getPosASL _unit,100,2,10];
 		sleep _timesleep;
 	};
 
@@ -159,7 +165,8 @@ MDLALA_fnc_MineDetector_selectAction = {
 };
 
 MDLALA_fnc_MineDetector_addAction = {
-	private _unit = _this select 0;
+	private ["_unit"];
+	_unit = _this select 0;
 	if (isNil {_unit getVariable "MDMineDetectorActions"}) then {
 		_unit addAction ["<t color='#12F905'>Use MineDetector</t>",{[(_this select 0),true,(_this select 2)] spawn MDLALA_fnc_MineDetector_selectAction;}, [], 0, false, true, "", '"MineDetector" in items _target'];
 		_unit setVariable ["MDMineDetectorActions",true,true]

@@ -5,7 +5,7 @@ if (!isserver) exitwith {};
 waitUntil{!(isNil "BIS_fnc_init")};
 waitUntil {time > 60};
 
-private ["_newZone","_mission_mkr","_mkrPos","_xcoor","_ycoor","_type","_objsel","_curtasks","_ins_debug"];
+private ["_newZone","_mission_mkr","_mkr_position","_jig_mission_xcoor","_jig_mission_ycoor","_type","_objsel","_curtasks","_ins_debug"];
 
 _newZone = [];
 _mission_mkr = [];
@@ -15,32 +15,33 @@ if (objective_list isEqualTo []) then {
 	side_mission_mkrs = side_mission_mkrs_copy;
 	publicVariableServer "side_mission_mkrs"; sleep 3;
 	objective_list = objective_list_copy;
-	publicVariableServer "objective_list"; sleep 3;
+	publicVariableServer "objective_list"; sleep 3;	
 };
 
 _mission_mkr = side_mission_mkrs select floor (random (count side_mission_mkrs));
-_mkrPos = getMarkerPos _mission_mkr;
-_xcoor = (getMarkerPos _mission_mkr select 0);
-_ycoor = (getMarkerPos _mission_mkr select 1);
+_mkr_position = getMarkerPos _mission_mkr;
+_jig_mission_xcoor = (getMarkerPos _mission_mkr select 0);
+_jig_mission_ycoor = (getMarkerPos _mission_mkr select 1);
 
-if (_ins_debug) then {diag_log text format ["Mission Pos : %1", _mkrPos];};
+if (_ins_debug) then {diag_log text format ["Mission Pos : %1", _mkr_position];};
 
 {
-	if (_mkrPos distance (getmarkerpos _x) == 0) then {
+	if (_mkr_position distance (getmarkerpos _x) == 0) then	{
 		side_mission_mkrs = side_mission_mkrs - [_x];
 	};
 } foreach side_mission_mkrs;
 publicVariable "side_mission_mkrs";
 sleep 2;
 
-_newZone = _newZone + [_xcoor,_ycoor] call miss_object_pos_fnc;
+_newZone = _newZone + [_jig_mission_xcoor,_jig_mission_ycoor] call miss_object_pos_fnc;
 if (_newZone isEqualTo []) then {
-	private _c = 0;
+	private ["_count"];
+	_count = 0;
 	while {_newZone isEqualTo []} do {
-		_newZone = _newZone + [_xcoor,_ycoor] call miss_object_pos_fnc;
+		_newZone = _newZone + [_jig_mission_xcoor,_jig_mission_ycoor] call miss_object_pos_fnc;
 		if (!(_newZone isEqualTo [])) exitWith {_newZone;};
-		_c = _c + 1;
-		if (_c > 6) exitWith {};
+		_count = _count + 1;
+		if (_count > 4) exitWith {};
 		sleep 4;
 	};
 };
@@ -67,7 +68,7 @@ _objsel = objective_list select (floor(random (count objective_list)));
 //_objsel = objective_list select 8;// test "destroy_mortar_squad"
 //_objsel = objective_list select 9;// test "c_n_h"
 //_objsel = objective_list select 10;// test "destroy_roadblock"
-//_objsel = objective_list select 11;// test "retrieve_data"
+
 objective_list = objective_list - [_objsel];
 publicVariable "objective_list";
 sleep 3;
@@ -117,13 +118,7 @@ switch (_objsel) do
 	case "destroy_roadblock":
 	{
 	_type = objective_objs select 10; [_newZone,_type] execVM "Objectives\road_block.sqf";
-	};	
-	case "retrieve_data":
-	{
-	_type = objective_objs select 11; [_newZone,_type] execVM "Objectives\data_retrieval.sqf";
 	};
 };
-
-//missionNamespace setVariable ["CurrentSideMission", _objsel, true];
 
 if (true) exitWith {};

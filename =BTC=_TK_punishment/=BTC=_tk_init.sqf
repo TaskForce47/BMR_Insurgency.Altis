@@ -9,7 +9,8 @@
 BTC_tk_blackscreen_punishment = 1;
 //BTC_tk_last_warning = 3;//variable moved to INS_definitions.sqf
 
-BTC_fnc_tk_PVEH = {
+BTC_fnc_tk_PVEH =
+{
 	//0 - first aid - create // [0,east,pos]
 	//1 - first aid - delete
 	_array = _this select 1;
@@ -18,7 +19,8 @@ BTC_fnc_tk_PVEH = {
 	hint format ["%1 has committed TK and has been punished by %2",_name,_punisher];
 	if (name player == _name) then {_spawn = [] spawn BTC_Teamkill;};
 };
-BTC_EH_killed = {
+BTC_EH_killed =
+{
 	_body = _this select 0;
 	_killer = _this select 1;
 	_veh_body = vehicle _body;
@@ -41,7 +43,8 @@ BTC_EH_killed = {
 		};
 	};
 };
-BTC_Teamkill = {
+BTC_Teamkill =
+{
 	player addrating 9999;
 	BTC_teamkiller = BTC_teamkiller + 1;
 	_uid = getPlayerUID player;
@@ -94,15 +97,23 @@ BTC_Teamkill = {
 		};
 	};
 };
-if (!isDedicated && !IamHC) then {
-	[] spawn {
-		waitUntil {!isNull player && player == player};
+if (isServer) then
+{
+	BTC_tk_PVEH = [];publicVariable "BTC_tk_PVEH";
+};
+if (!isDedicated) then
+{
+	[] spawn
+	{
+		private "_uid";
+		waitUntil {!isNull player};
+		waitUntil {player == player};
 		player addEventHandler ["Killed", BTC_EH_killed];
 		"BTC_tk_PVEH" addPublicVariableEventHandler BTC_fnc_tk_PVEH;
 		player addrating 9999;
 		BTC_side = side player;
 		BTC_vip = [];
-		private _uid = getPlayerUID player;
+		_uid = getPlayerUID player;
 		if (isNil {BTC_logic getVariable _uid}) then
 		{
 			BTC_logic setVariable [_uid,0,true];

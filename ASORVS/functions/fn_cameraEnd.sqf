@@ -1,3 +1,4 @@
+ 
 player cameraEffect ["terminate","back"];
 camDestroy ASORVS_Camera;
 BIS_DEBUG_CAM = nil;

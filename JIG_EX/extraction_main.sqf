@@ -1,5 +1,5 @@
 /*
- extraction_main.sqf v1.22 by Jigsor is WIP
+ extraction_main.sqf v1.15 by Jigsor is WIP
  null = [] execVM "JIG_EX\extraction_main.sqf";
  runs in JIG_EX\extraction_init.sqf 
 */
@@ -7,7 +7,7 @@
 if (!isServer) exitWith {};
 if (!hasInterface && !isDedicated) exitWith {};
 [] spawn {
-	private ["_recruitsArry","_playerArry","_range","_poscreate","_speed","_SAdir","_spwnairdir","_randomAltitudes","_height","_type","_vehicle","_veh","_vel","_vehgrp","_VarName","_wp0","_wp1","_wp2","_evacComplete""_availableSeats","_ext_caller_group_count","_chopper_to_small","_vehgrp_units","_gunners_removed","_has_gunner_pos","_without_gunner_pos","_switch_driver","_animateDoors","_localityChanged"];
+	private ["_recruitsArry","_playerArry","_range","_poscreate","_speed","_SAdir","_spwnairdir","_randomAltitudes","_maxalt","_height","_type","_vehicle","_veh","_vel","_vehgrp","_VarName","_wp0","_wp1","_wp2","_evacComplete""_availableSeats","_ext_caller_group_count","_chopper_to_small","_vehgrp_units","_gunners_removed","_has_gunner_pos","_without_gunner_pos","_randomTypes","_maxtype","_switch_driver","_animateDoors","_localityChanged"];
 
 	evac_toggle = false;publicVariable "evac_toggle";
 	sleep 0.3;
@@ -19,12 +19,12 @@ if (!hasInterface && !isDedicated) exitWith {};
 	_vehgrp = grpNull;
 	EvacHeliW1 = ObjNull;
 	ex_group_ready = false;
-	_has_gunner_pos = ["B_CTRG_Heli_Transport_01_tropic_F","B_Heli_Transport_01_F","B_Heli_Transport_01_camo_F","kyo_MH47E_base","RHS_CH_47F_10","RHS_CH_47F_light"];
+	_has_gunner_pos = ["B_Heli_Transport_01_F","B_Heli_Transport_01_camo_F","kyo_MH47E_base"];
 	_without_gunner_pos = ["I_Heli_Transport_02_F","CH49_Mohawk_FG","B_Heli_Light_01_F"];
 	_helcat_types = ["AW159_Transport_Camo"];
-	_chinook_types = ["kyo_MH47E_Ramp","kyo_MH47E_HC","RHS_CH_47F_10","RHS_CH_47F_light"];// ("kyo_MH47E_base" unsupported)
+	_chinook_types = ["kyo_MH47E_Ramp","kyo_MH47E_HC"];// ("kyo_MH47E_base" unsupported)
 
-	"ext_caller_group" addPublicVariableEventHandler {call compile format ["%1",_this select 1]};//Allows group members to update on the fly
+	"ext_caller_group" addPublicVariableEventHandler {call compile format ["%1",_this select 1]};//Allows group members to update on the fly 
 	"EvacHeliW1" addPublicVariableEventHandler {call compile format ["%1",_this select 1]};	
 	"ex_group_ready" addPublicVariableEventHandler {call compile format ["%1",_this select 1]};
 	"JIG_EX_Caller" addPublicVariableEventHandler {call compile format ["%1",_this select 1]};
@@ -35,8 +35,8 @@ if (!hasInterface && !isDedicated) exitWith {};
 	ex_group_ready = false;
 	publicVariable "ex_group_ready";
 	call Evac_Spawn_Loc;
-	waitUntil {sleep 0.3; !isNull EvacSpawnPad};
-	[localize "STR_BMR_heli_extraction_inbound", "JIG_EX_MPhint_fnc", ext_caller_group, false, false] call BIS_fnc_mp;// Everything is now ready. Next code block creates chopper and performs Evac/Cleanup.
+	waitUntil {!isNull EvacSpawnPad};
+	[localize "STR_BMR_heli_extraction_inbound", "JIG_EX_MPhint_fnc", nil, [], false, nil, nil, ext_caller_group] call BIS_fnc_mp;// Everything is now ready. Next code block creates chopper and performs Evac/Cleanup.
 	sleep 1;
 
 	if ((isNull EvacHeliW1) || (not(alive EvacHeliW1))) then
@@ -50,9 +50,12 @@ if (!hasInterface && !isDedicated) exitWith {};
 		_SAdir = getDir EvacSpawnPad;
 		_spwnairdir = [getPosATL EvacSpawnPad, getPosATL EvacLZpad] call BIS_fnc_dirTo;
 		_randomAltitudes = [35,45,55];
-		_height = selectRandom _randomAltitudes;
+		_maxalt = (count _randomAltitudes)-1;
+		_height = _randomAltitudes select (round random _maxalt);
 		if (JIG_EX_Random_Type) then {
-			_type = selectRandom JIG_EX_Chopper_Type;
+			_randomTypes = JIG_EX_Chopper_Type;
+			_maxtype = (count _randomTypes)-1;
+			_type = _randomTypes select (round random _maxtype);
 		} else {
 			_type = JIG_EX_Chopper_Type select 0;// select default type
 		};
@@ -80,7 +83,7 @@ if (!hasInterface && !isDedicated) exitWith {};
 
 		_availableSeats = EvacHeliW1 emptyPositions "Cargo";
 
-		if (!(alive _veh) or !(canMove _veh)) then {[localize "STR_BMR_heli_extraction_down", "JIG_EX_MPhint_fnc", ext_caller_group, false, false] call BIS_fnc_mp;};
+		if (!(alive _veh) or !(canMove _veh)) then {[localize "STR_BMR_heli_extraction_down", "JIG_EX_MPhint_fnc", nil, [], false, nil, nil, ext_caller_group] call BIS_fnc_mp;};
 
 		if (not (JIG_EX_gunners)) then {
 			if (_type in _has_gunner_pos) then {
@@ -98,12 +101,6 @@ if (!hasInterface && !isDedicated) exitWith {};
 					deleteVehicle (EvacHeliW1 turretUnit [ 3 ]);
 					[EvacHeliW1 turretUnit [ 4 ]] join grpNull;
 					deleteVehicle (EvacHeliW1 turretUnit [ 4 ]);
-
-					//RHS Chinooks
-					if ((_type == "RHS_CH_47F_10") || (_type == "RHS_CH_47F_light")) then {
-						[EvacHeliW1 turretUnit [ 1 ]] join grpNull;
-						deleteVehicle (EvacHeliW1 turretUnit [ 1 ]);
-					};
 				};
 				_gunners_removed = true;
 			};
@@ -113,7 +110,7 @@ if (!hasInterface && !isDedicated) exitWith {};
 			};
 		};
 
-		[EvacHeliW1] spawn {private _animateDoors = [(_this select 0)] call animate_doors_fnc;};
+		[EvacHeliW1] spawn {private "_animateDoors"; _animateDoors = [(_this select 0)] call animate_doors_fnc;};
 
 		// Set Evac helicopter waypoints and move to evacuation LZ.
 		_wp0 = _vehgrp addWaypoint [getPosATL EvacLZpad, 1];
@@ -148,7 +145,7 @@ if (!hasInterface && !isDedicated) exitWith {};
 			if (alive _veh) exitWith {{ deleteVehicle _x; sleep 0.1} forEach (units _vehgrp); deleteVehicle _veh; _evacComplete = true; deleteMarker "tempDropMkr";};
 		};
 
-		deleteMarker "tempPUmkr";
+		deleteMarker "tempExtMarker";
 
 		if (not (_evacComplete)) then
 		{
@@ -248,7 +245,7 @@ if (!hasInterface && !isDedicated) exitWith {};
 			// Move Evac helicopter back towards original pick up location and delete itself.
 			waitUntil {!isNull driver EvacHeliW1 || isNull EvacHeliW1};
 
-			if (isNull EvacHeliW1) exitWith {{deleteVehicle _x; sleep 0.1} forEach (units _vehgrp), [_veh, EvacSpawnPad, EvacLZpad]; deleteMarker "tempDropMkr"; sleep 0.1; deleteMarker "tempPUmkr"; sleep 0.1; _evacComplete = true; evac_toggle = true; publicVariable "evac_toggle";};
+			if (isNull EvacHeliW1) exitWith {{deleteVehicle _x; sleep 0.1} forEach (units _vehgrp), [_veh, EvacSpawnPad, EvacLZpad]; deleteMarker "tempDropMkr"; sleep 0.1; deleteMarker "tempExtMarker"; sleep 0.1; _evacComplete = true; evac_toggle = true; publicVariable "evac_toggle";};
 
 			{EvacHeliW1 lock 2} forEach playableunits;
 
@@ -302,13 +299,13 @@ if (!hasInterface && !isDedicated) exitWith {};
 			} forEach (units EvacHeliW1);
 		};
 
-		if !(getMarkerColor "EvacSpawnMkr" isEqualTo "") then {deleteMarker "EvacSpawnMkr";};
-		if (not (isNull EvacSpawnPad)) then {deleteVehicle EvacSpawnPad;};
-		if (not (isNull EvacLZpad)) then {deleteVehicle EvacLZpad;};
+		if (!isNil "EvacSpawnMkr") then {deleteMarker "EvacSpawnMkr";};	sleep 0.1;
+		if (not (isNull EvacSpawnPad)) then {deleteVehicle EvacSpawnPad;}; sleep 0.1;
+		if (not (isNull EvacLZpad)) then {deleteVehicle EvacLZpad;}; sleep 0.1;
 		evac_toggle = true;
 		publicVariable "evac_toggle";
 		sleep 1.2;
-		[localize "STR_BMR_heli_extraction_standby", "JIG_EX_MPhint_fnc", ext_caller_group, false, false] call BIS_fnc_mp;
+		[localize "STR_BMR_heli_extraction_standby", "JIG_EX_MPhint_fnc", nil, [], false, nil, nil, ext_caller_group] call BIS_fnc_mp;
 	};
 	if (true) exitwith {};
 };

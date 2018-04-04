@@ -6,18 +6,20 @@ _op4_player = _this select 0;
 _pnf = false;
 _rwp = nil;
 _bp = getMarkerPos "Respawn_West";
-_aP = playableUnits - entities INS_op4_players;// exclude east players
-_mL = if (INS_p_rev > 5) then {false;}else{true;};
+_aP = playableUnits;
+if (INS_p_rev > 5) then {_mL = false;}else{_mL = true;};
 
 waitUntil {!isNull _op4_player};
+
+_aP = _aP - [_op4_player];// exclude player calling the script
 
 if (count _aP > 0) then
 {
 	{
 		_bs = speed _x;
 		_pos = (getPos _x);
-		if (_bs > 8 || _pos select 2 > 4) then {_aP = _aP - [_x];};
-	} foreach _aP;// exclude players in moving vehicles, above ground, in aircraft or in high structures
+		if ((_bs > 8) || (_pos select 2 > 4) || {(side _x == east)}) then {_aP = _aP - [_x];};
+	} foreach _aP;// exclude players east, players in moving vehicles, above ground, in aircraft or in high structures
 }else{
 	_pnf = true;
 };
@@ -26,12 +28,12 @@ if (count _aP > 0) then
 {	
 	_rwp = _aP select (floor (random (count _aP)));
 	_aP = _aP - ["_rwp"];
-	while {!isNil "_rwp" && {_rwp distance _bp < 600}} do {
+	while {!isNil "_rwp" && {_rwp distance _bp < 500}} do {
 		_rwp = _aP select (floor (random (count _aP)));
 		_aP = _aP - ["_rwp"];
 	};
 };// exclude players to close to blufor base
-
+	
 if (!isNil "_rwp") then
 {
 	// Move Op4 Base within 250 to 500 meters of blufor player
@@ -40,8 +42,6 @@ if (!isNil "_rwp") then
 	_cooY = _pP select 1;
 	_wheX = [250,500] call BIS_fnc_randomInt;
 	_wheY = [250,500] call BIS_fnc_randomInt;
-	if (floor random 2 isEqualTo 0) then {_wheX = _wheX - (_wheX * 2)};
-	if (floor random 2 isEqualTo 0) then {_wheY = _wheY - (_wheY * 2)};
 	_Op4rP = [_cooX+_wheX,_cooY+_wheY,0];
 	_c = 0;
 	_sP = _Op4rP isFlatEmpty [8,384,0.5,2,0,false,ObjNull];
@@ -79,9 +79,6 @@ if (_pnf) then
 		_sP = _Op4rP isFlatEmpty [10,384,0.5,2,0,false,ObjNull];
 
 		while {(count _sP) < 1} do {
-			_wheX = random (_dis*2)-_dis;
-			_wheY = random (_dis*2)-_dis;
-			_Op4rP = [_cooX+_wheX,_cooY+_wheY,0];
 			_sP = _Op4rP isFlatEmpty [5,384,0.9,2,0,false,ObjNull];
 			sleep 0.2;
 		};

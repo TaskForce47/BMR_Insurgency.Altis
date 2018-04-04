@@ -10,7 +10,8 @@ _mk = {_x == "Medikit"} count items _unit;
 
 _unit setVariable ["btc_qr_unc",true];
 
-if (vehicle _unit != _unit) then {
+if (vehicle _unit != _unit) then
+{
 	_unit action ["getOut", vehicle _unit];
 };
 
@@ -28,6 +29,7 @@ _unit setVariable ["btc_qr_resp",false];
 _unit setVariable ["btc_qr_is_leader",false];
 
 _isPlayer = isPlayer _unit;
+
 _group = group _unit;
 
 if (btc_qr_unc_leave_group) then {if (leader group _unit == _unit) then {_unit setVariable ["btc_qr_is_leader",true];};[_unit] joinSilent grpNull;};
