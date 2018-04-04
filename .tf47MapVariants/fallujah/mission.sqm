@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=7228;
+		nextID=7245;
 	};
 	class MarkerIDProvider
 	{
@@ -366,7 +366,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=1413;
+		items=1424;
 		class Item0
 		{
 			dataType="Marker";
@@ -28660,7 +28660,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={7855.5605,7,1958.2587};
-				angles[]={-0,4.712389,0};
+				angles[]={0,4.712389,0};
 			};
 			id=7225;
 			type="ACE_moduleAssignMedicVehicle";
@@ -28713,7 +28713,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={7848.7402,7,1957.7148};
-				angles[]={-0,4.712389,0};
+				angles[]={0,4.712389,0};
 			};
 			id=7226;
 			type="ACE_moduleAssignMedicRoles";
@@ -28982,6 +28982,118 @@ class Mission
 				};
 				nAttributes=11;
 			};
+		};
+		class Item1413
+		{
+			dataType="Marker";
+			position[]={9204.21,7.5623789,3011.0852};
+			name="tf47_modules_umenu_ft_marker_start";
+			type="Empty";
+			id=7228;
+		};
+		class Item1414
+		{
+			dataType="Marker";
+			position[]={9204.75,23.516001,3346.865};
+			name="marker_29";
+			text="Task Force Dagger Public Server";
+			type="mil_objective";
+			colorName="ColorBrown";
+			id=7229;
+			atlOffset=-0.00012397766;
+		};
+		class Item1415
+		{
+			dataType="Marker";
+			position[]={9204.75,21.725,3316.865};
+			name="marker_30";
+			text=" go to www.taskforcedagger.de for more information and server rules";
+			type="mil_dot";
+			id=7230;
+			atlOffset=-0.00037765503;
+		};
+		class Item1416
+		{
+			dataType="Marker";
+			position[]={9204.75,19.945999,3286.865};
+			name="marker_31";
+			text=" join Teamspeak 3: ts.tf47.de";
+			type="mil_dot";
+			id=7231;
+			atlOffset=0.11052513;
+		};
+		class Item1417
+		{
+			dataType="Marker";
+			position[]={9206.0371,14.818,3203.376};
+			name="marker_38";
+			text=" All Aircrafts have to be on Frequenz Air to Ground & Air to Air at all times";
+			type="mil_warning";
+			colorName="ColorRed";
+			id=7238;
+			atlOffset=0.10920238;
+		};
+		class Item1418
+		{
+			dataType="Marker";
+			position[]={9206.0371,17.106001,3243.376};
+			name="marker_39";
+			text=" All Team Leaders  have to be on Ground to Ground Frequenz at all times";
+			type="mil_warning";
+			colorName="ColorRed";
+			id=7239;
+			atlOffset=0.00015830994;
+		};
+		class Item1419
+		{
+			dataType="Marker";
+			position[]={9206.0371,15.924,3223.376};
+			name="marker_40";
+			text=" All Armored Vehicles have to be on Ground to Ground Frequenz at all times";
+			type="mil_warning";
+			colorName="ColorRed";
+			id=7240;
+			atlOffset=0.041183472;
+		};
+		class Item1420
+		{
+			dataType="Marker";
+			position[]={9202.6563,8.2729912,3048.2751};
+			name="marker_41";
+			text=" NAME |  LEADER  | INTERN FREQUENZ";
+			type="mil_marker";
+			colorName="ColorBlack";
+			id=7241;
+		};
+		class Item1421
+		{
+			dataType="Marker";
+			position[]={9204.1064,9.476984,3090.4126};
+			name="marker_42";
+			text=" Active Teams and Vehicles";
+			type="mil_objective";
+			colorName="ColorBrown";
+			id=7242;
+		};
+		class Item1422
+		{
+			dataType="Marker";
+			position[]={9202.8193,12.497345,3162.7322};
+			name="marker_43";
+			text=" Press STRG + U for Player Menu";
+			type="mil_warning";
+			colorName="ColorOrange";
+			id=7243;
+		};
+		class Item1423
+		{
+			dataType="Marker";
+			position[]={9202.8193,11.099873,3132.7322};
+			name="marker_44";
+			text=" Press ALT + U for Vehicle Spawner or Service Point";
+			type="mil_warning";
+			colorName="ColorOrange";
+			id=7244;
 		};
 	};
 };
