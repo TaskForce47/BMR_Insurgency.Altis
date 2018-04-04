@@ -433,6 +433,7 @@ JIG_transfer_fnc = {
 	true
 };
 killedInfo_fnc = {
+/*
 	// Generates killed by whom, weapon used and distance from killer message. by Jigsor
 	_poorSoul = _this select 0;
 	_killer = _this select 1;
@@ -459,6 +460,7 @@ killedInfo_fnc = {
 		};
 	};
 };
+*/
 JIG_intel_found = {
 	// Remove intel addaction, grab intel animation, delete intel object, creates intel maker, update JIP intel marker state, global sidechat player name found intel, add 2 points to caller by Jigsor
 	_host = _this select 0;

@@ -15,8 +15,8 @@ if(("extDB3" callExtension "9:VERSION") == "") then {
             BIS_fnc_guiMessage;
         diag_log "Missing extension: extDB3!";
         diag_log "Ending mission!";
-   //     ["loser", false, true] remoteExecCall
-    //        ["BIS_fnc_endMission"];
+        ["loser", false, true] remoteExecCall
+        ["BIS_fnc_endMission"];
     };
 };
 

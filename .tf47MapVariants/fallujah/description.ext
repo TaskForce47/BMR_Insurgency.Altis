@@ -1,10 +1,12 @@
-Author = "Jigsor =BMR=";
-loadScreen = "images\bmrflag.paa";
-onLoadName = "BMR Insurgency Fallujah";
-onLoadMission = bmr-squad.com;
+Author = "Jigsor =BMR=, edited by Task Force Dagger";
+loadScreen = "media\dagger_512.paa";
+onLoadName = "TFD Insurgency Fallujah";
+onLoadMission = taskforcedagger.com;
 onLoadMissionTime = false;
-overviewText = "Find and destroy all ammo caches";
-overviewPicture = "images\bmrflag.paa";
+overviewText = "Find and destroy all ammo caches!";
+overviewPicture = "media\dagger_512.paa";
+
+cba_settings_hasSettingsFile = 1;
 
 class Header
 {
@@ -29,19 +31,21 @@ forceRotorLibSimulation	= 0;// Default value: 0 = options based; 1 = force enabl
 
 #include "Hpp\Parameters.hpp"
 
-#include "=BTC=_revive\=BTC=_respawn.h"
-#include "=BTC=_q_revive\dlg.h"
-#include "ATM_airdrop\dialog.hpp"
-#include "JWC_CASFS\casDefine.hpp"
-#include "JWC_CASFS\casMenu.hpp"
-#include "taw_vd\dialog.hpp"
-#include "INSui\DLG\DH_Defines.hpp"
-#include "INSui\DLG\DH_Dialogs.hpp"
-#include "bon_recruit_units\dialog\common.hpp"
-#include "bon_recruit_units\dialog\recruitment.hpp"
-#include "ASORVS\menu.hpp"
+//#include "=BTC=_revive\=BTC=_respawn.h"
+//#include "=BTC=_q_revive\dlg.h"
+//#include "ATM_airdrop\dialog.hpp"
+//#include "JWC_CASFS\casDefine.hpp"
+//#include "JWC_CASFS\casMenu.hpp"
+//#include "taw_vd\dialog.hpp"
+//#include "INSui\DLG\DH_Defines.hpp"
+//#include "INSui\DLG\DH_Dialogs.hpp"
+//#include "bon_recruit_units\dialog\common.hpp"
+//#include "bon_recruit_units\dialog\recruitment.hpp"
+//#include "ASORVS\menu.hpp"
+//#include "LT\LTmenu.hpp"
 
 #include "Hpp\Sounds.hpp"
+//#include "Hpp\AceModuleSettings.hpp"
 
 class CfgFunctions
 {
@@ -52,21 +56,36 @@ file = "INSui\Functions";
 class keyPresses {};
 };
 };
-#include "Hpp\CfgFunctions.hpp"
-#include "taw_vd\CfgFunctions.hpp"
-#include "ASORVS\cfgfunctions.hpp"
+//#include "taw_vd\CfgFunctions.hpp"
+//#include "ASORVS\cfgfunctions.hpp"
+//#include "LT\cfgfunctions.hpp"
+#include "TF47CoreScripts\CfgFunctions.hpp"
+#include "TF47Modules\CfgFunctions.hpp"
 };
 
-
-
-class CfgDebriefing
+class Extended_InitPost_EventHandlers {
+    class Helicopter {
+        class BailChopper {
+			exclude[] = {"B_UAV_01_F","I_UAV_01_F","O_UAV_01_F"};
+			clientInit = "(_this select 0) addAction ['Bail', {execVM 'scripts\INS_Bail.sqf'}, [], 8, false, false, '', '_target == (vehicle _this)'];";
+		};
+    };
+};
+class CfgNotifications
 {
+    #include "TF47CoreScripts\CfgNotifications.hpp"
+    #include "TF47Modules\CfgNotifications.hpp"
+};
+#include "TF47Modules\CfgDialogs.hpp"
+class CfgDebriefing
+{  
+	#include "TF47CoreScripts\CfgDebriefing.hpp"
 	class END1
 	{
 		title = "Mission Completed";
 		subtitle = "";
 		description = "Insurgents have been defeated!";
-		pictureBackground = "images\bmrflag.paa";
+		pictureBackground = "media\dagger_512.paa";
 		pictureColor[] = {0.0,0.3,0.6,1};
 	};
 	class END2
@@ -97,22 +116,21 @@ class RscTitles {
 
 		class title1
 		{
-			idc = -1;
 			type = 0;
-			style = "48 + 0x800";
+			idc = -1;
 			size = 1;
-			font = "PuristaMedium";
-			sizeEx = 1;
-			text = "images\bmrinscamo3.paa";
-			x = 0.270833 * safezoneW + safezoneX;
-			y = 0.00103999 * safezoneH + safezoneY;
-			w = 0.458333 * safezoneW;
-			h = 0.999999 * safezoneH;
-			colorText[] = {1,1,1,1};
 			colorBackground[] = {0,0,0,0};
+			colorText[] = {1,1,1,1};
+			font = "PuristaMedium";
+			text = "media\dagger_512.paa";
+			style = 48 + 0x800;
+			sizeEx = 1;
+			x = safezoneX + safezoneW/2 - 0.5;
+			y = safezoneY + safezoneH/2 - 0.5;
+			w = 1;
+			h = 1;
 		};
 	};
-
 	class RscPicture;
 	class RscHcamDialog {
 		idd = -1;
@@ -193,6 +211,6 @@ class RscTitles {
 
 		};
 	};
-	#include "=BTC=_Logistic\=BTC=_Lift\=BTC=_Hud.h"
-	#include "INSui\UI\defines.hpp"
+	//#include "=BTC=_Logistic\=BTC=_Lift\=BTC=_Hud.h"
+	//#include "INSui\UI\defines.hpp"
 };
