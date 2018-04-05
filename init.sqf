@@ -92,7 +92,7 @@ switch (INS_op_faction) do
 		if ((isClass(configFile >> "cfgPatches" >> "rhs_main")) &&
 		{(isClass(configFile >> "cfgPatches" >> "lop_main"))}) then {
 			activateAddons ["rhs_main","rhs_weapons","rhsusf_main","rhs_c_troops","rhs_c_btr","rhs_c_bmp","rhs_c_tanks","rhs_c_a2port_armor","RHS_A2_CarsImport","RHS_A2_AirImport","rhsusf_c_heavyweapons","rhsusf_c_weapons","rhs_c_a2port_air","lop_faction_ists","lop_faction_am","lop_faction_sla","lop_faction_ia","lop_faction_cdf","lop_faction_tak_civ"];
-			[RESISTANCE,6,5]execVM "eos\OpenMe.sqf";
+			[EAST,6,5]execVM "eos\OpenMe.sqf";
 		}else{INS_mod_missing = true;};
 	};
 	case 6 : // Syrian Army and Middle Eastern Irregulars (Al Qaida) with CUP Weapons (@mec;@cup;@asdg_jr;@rds;@rds_tank;@cha_mi24)

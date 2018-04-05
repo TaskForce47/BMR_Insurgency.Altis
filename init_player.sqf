@@ -139,9 +139,9 @@ if (DebugEnabled > 0) then {
 		waitUntil {!isNull (findDisplay 46)};
 		handle = (findDisplay 46) displayAddEventHandler ["KeyDown", "_this call DH_fnc_keyPresses"];
 	};
-	player addEventHandler ["killed", {_nul = _this call killedInfo_fnc}];
-	player addEventHandler ["Respawn", {[] spawn JIG_p_actions_resp; (_this select 0) spawn INS_RestoreLoadout; (_this select 0) spawn INS_UI_pref}];
-	If (side player == east) then {player addEventHandler ["killed", {handle = [_this select 0] execVM "scripts\MoveOp4Base.sqf";}];};
+	//player addEventHandler ["killed", {_nul = _this call killedInfo_fnc}];
+	//player addEventHandler ["Respawn", {[] spawn JIG_p_actions_resp; (_this select 0) spawn INS_RestoreLoadout; (_this select 0) spawn INS_UI_pref}];
+	//If (side player == east) then {player addEventHandler ["killed", {handle = [_this select 0] execVM "scripts\MoveOp4Base.sqf";}];};
 	if (!isServer) then	{"PVEH_netSay3D" addPublicVariableEventHandler {private "_array"; _array = _this select 1; (_array select 0) say3D (_array select 1);};};
 
 	if ((INS_p_rev isEqualTo 4) || (INS_p_rev isEqualTo 5)) then {
@@ -206,7 +206,7 @@ if (DebugEnabled > 0) then {
 			{_x setMarkerAlphaLocal 1;} forEach Blu4_mkrs;
 			{_x setMarkerAlphaLocal 0;} forEach Op4_mkrs;
 			[] spawn INS_intro;
-			[] spawn {
+			/*[] spawn {
 				sleep 15;
 				loadout = [player] call getLoadout;
 				if (INS_MHQ_enabled) then {
@@ -225,7 +225,7 @@ if (DebugEnabled > 0) then {
 					INS_flag addAction["<t size='1.5' shadow='2' color='#ED2744'>Transfer to MHQ_2</t>", "call JIG_transfer_fnc", ["MHQ_2"], 4.1];
 					INS_flag addAction["<t size='1.5' shadow='2' color='#ED2744'>Transfer to MHQ_3</t>", "call JIG_transfer_fnc", ["MHQ_3"], 4];
 				};
-			};
+			};*/
 		};
 	}
 	else
@@ -296,6 +296,7 @@ if (DebugEnabled > 0) then {
 	};
 
 	// Vehicle Reward incentive initialized if Mechanized Armor threat enabled.
+	/*
 	if (MecArmPb > 1) then {
 		[] spawn {
 			waitUntil{not isNull player};
@@ -322,7 +323,7 @@ if (DebugEnabled > 0) then {
 			};
 		};
 	};
-
+	*/
 	// Ambient Combat Sound
 	if (ambCombSound isEqualTo 1) then {s=[objective_pos_logic,23,11] execVM "scripts\fn_Battle.sqf";};
 

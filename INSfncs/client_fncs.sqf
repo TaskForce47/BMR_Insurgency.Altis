@@ -74,8 +74,8 @@ INS_intro_op4 = {
 	player cameraEffect ["terminate","back"];
 	UIsleep 0.5;
 	player sideChat localize "STR_BMR_initialize_done";
-	player sideChat localize "STR_BMR_intro_tip1";
-	player sideChat localize "STR_BMR_intro_tip2";
+	//player sideChat localize "STR_BMR_intro_tip1";
+	//player sideChat localize "STR_BMR_intro_tip2";
 	setViewDistance -1;
 	camDestroy _cam;
 	enableRadio true;
@@ -459,8 +459,9 @@ killedInfo_fnc = {
 			};
 		};
 	};
-};
 */
+};
+
 JIG_intel_found = {
 	// Remove intel addaction, grab intel animation, delete intel object, creates intel maker, update JIP intel marker state, global sidechat player name found intel, add 2 points to caller by Jigsor
 	_host = _this select 0;
@@ -482,7 +483,7 @@ JIG_intel_found = {
 	sleep 0.1;
 	[[_text],"JIG_MPsideChatWest_fnc"] call BIS_fnc_mp;
 
-	_distance = [10,400] call BIS_fnc_randomInt; // Minimum intel marker range 10m. Maximum intel marker range 400m.
+	_distance = [50,1500] call BIS_fnc_randomInt; // Minimum intel marker range 10m. Maximum intel marker range 400m.
 	_direction = [0,359] call BIS_fnc_randomInt; // Random direction between 0 and 359 degrees.
 	_randomPos = [_pos_info, _distance, _direction] call BIS_fnc_relPos; // The position at the random distance and random direction from current_cache_pos.
 
@@ -504,7 +505,7 @@ JIG_intel_found = {
 	[all_intel_mkrs] call JIPmkr_updateServer_fnc;
 	publicVariable "all_intel_mkrs";
 	sleep 0.1;
-
+	/*
 	if (side _caller == INS_Blu_side) then {
 		_caller addrating 200;
 		_caller addScore _pScore;
@@ -512,6 +513,7 @@ JIG_intel_found = {
 		publicVariableServer "paddscore";
 		[West,"HQ"] sideChat "+2 points";
 	};
+	*/
 	true
 };
 Op4_spawn_pos = {
@@ -783,13 +785,16 @@ INS_Recruit_skill = {
 	true
 };
 INS_RespawnLoadout = {
+	/*
 	// Save respawn kit used with "Save Respawn Loadout" action by Jigsor
 	INS_SaveLoadout = [(_this select 1), [missionNamespace, "BMRInsInv"]] call BIS_fnc_saveInventory;
 	_kitSaved = "A3\Sounds_F\sfx\Beep_Target.wss";
 	playsound3d [_kitSaved, (_this select 0), false, getPosasl (_this select 1), 10,0.5,10];
 	true
+	*/
 };
 INS_RestoreLoadout = {
+/*
 	// Restore saved kit when respawned by Jigsor.
 	if (isNil "INS_SaveLoadout") then {
 		[player, loadout] call setLoadout;
@@ -797,6 +802,7 @@ INS_RestoreLoadout = {
 		[player, [missionNamespace, "BMRInsInv"]] call BIS_fnc_loadInventory;
 	};
 	true
+	*/
 };
 INS_UI_pref = {
 	// Restore status hud and digital heading on respawn if they were activated before death by Jigsor.
