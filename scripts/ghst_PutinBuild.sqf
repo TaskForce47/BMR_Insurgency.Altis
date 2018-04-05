@@ -246,7 +246,7 @@ _cache_loop = [] spawn
 			publicVariable "cache_destroyed";
 			sleep 3;
 				/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
-				[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+				[objNull,5, 10, true, 'Ammo Cache destroyed'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
 				/**************************************************************/
 		}
 		else
@@ -257,7 +257,7 @@ _cache_loop = [] spawn
 			publicVariable "cache_destroyed";
 			sleep 3;
 				/*****ADD*TICKETS*TO*ACTUAL*TICKET*AMOUNT*BY*TASKFORCE47*******/
-				[objNull,5, 10, true, 'Side Mission'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
+				[objNull,5, 10, true, 'Ammo Cache destroyed'] remoteExecCall ["tf47_core_ticketsystem_fnc_changeTickets", 2];
 				/**************************************************************/
 		};
 	};
