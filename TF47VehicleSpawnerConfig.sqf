@@ -116,7 +116,11 @@ VS_CONFIG_BEGIN
         "rhsusf_M1083A1P2_B_M2_D_flatbed_fmtv_usarmy",
         "rhsusf_M1084A1P2_D_fmtv_usarmy",
         "rhsusf_M1084A1P2_B_D_fmtv_usarmy",
-        "rhsusf_M1084A1P2_B_M2_D_fmtv_usarmy"
+        "rhsusf_M1084A1P2_B_M2_D_fmtv_usarmy",
+		"I_LT_01_AA_F",
+		"I_LT_01_AT_F",
+		"I_LT_01_cannon_F",
+		"I_LT_01_scout_F"
       ],
       0, 15, []
     ],
@@ -133,7 +137,8 @@ VS_CONFIG_BEGIN
         "RHS_M2A3_BUSKIII",
         "RHS_M6",
         "UK3CB_BAF_FV432_Mk3_GPMG_Sand",
-        "UK3CB_BAF_FV432_Mk3_RWS_Sand"
+        "UK3CB_BAF_FV432_Mk3_RWS_Sand",
+		"B_AFV_Wheeled_01_up_cannon_F"
       ],
       2, 25,
       [
