@@ -32,6 +32,19 @@ _box = _x;
 		"ACE_VMM3",
 
 		//PRIMARY
+		/*AKs*/
+		"rhs_weap_ak103_2_npz",
+		"rhs_weap_ak103_gp25_npz",
+		"rhs_weap_ak105_zenitco01_b33",
+		"rhs_weap_ak104_zenitco01_b33",
+		"rhs_weap_ak74m_2mag_npz",
+		"rhs_weap_ak74m_desert_npz",
+		"rhs_weap_ak74m_fullplum_npz",
+		"rhs_weap_ak74mr_gp25",
+		"rhs_weap_akm",
+		"rhs_weap_akm_gp25",
+		"rhs_weap_akmn_npz",
+		/*AKs END*/
 		"rhs_weap_hk416d10",
 		"rhs_weap_hk416d10_m320",
 		"rhs_weap_hk416d10_LMT",
@@ -248,6 +261,25 @@ _box = _x;
 		"UK3CB_BAF_9_17Rnd",
 
 		//RIFLE AMMO
+		/*AK AMMO*/
+		"rhs_30Rnd_762x39mm",
+		"rhs_30Rnd_762x39mm_tracer",
+		"rhs_30Rnd_762x39mm_89",
+		"rhs_30Rnd_762x39mm_U",
+		"rhs_30Rnd_545x39_AK",
+		"rhs_30Rnd_545x39_AK_no_tracers",
+		"rhs_30Rnd_545x39_7N6_AK",
+		"rhs_30Rnd_545x39_7N10_AK",
+		"rhs_30Rnd_545x39_7N22_AK",
+		"rhs_30Rnd_545x39_AK_green",
+		"rhs_30Rnd_545x39_7U1_AK",
+		"rhs_45Rnd_545X39_AK",
+		"rhs_45Rnd_545X39_7N6_AK",
+		"rhs_45Rnd_545X39_7N10_AK",
+		"rhs_45Rnd_545X39_7N22_AK",
+		"rhs_45Rnd_545X39_AK_Green",
+		"rhs_45Rnd_545X39_7U1_AK",
+		/*AK AMMO END*/
 		"rhsusf_mag_10Rnd_STD_50BMG_M33",
 		"rhsusf_mag_10Rnd_STD_50BMG_mk211",
 		"rhsusf_mag_40Rnd_46x30_AP",
